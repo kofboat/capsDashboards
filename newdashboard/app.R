@@ -2,15 +2,15 @@
 
 library(shiny)
 library(shinydashboard)
-
+library(shinydashboardPlus)
 library(tidyverse)
 library(ggplot2)
-
+library(DT)
 #----------------------------------------------------------
 #     IMPORT DATA
 #----------------------------------------------------------
 
-msd <- read_csv("c:/Users/kb_Ak/capsDashboards/newdashboard/master.data.csv")
+msd <- read_csv("master.data.csv")
 
 
 #-----------------------------------------------------------
@@ -427,13 +427,13 @@ ui <- dashboardPage(
                   fluidRow(
                     
                     box(title = "MONTH", width = 3 ,status = "primary" , solidHeader = T,
-                        selectInput(inputId = "month", label = h4("SELECT MONTH"), 
+                        selectInput(inputId = "month", label = h5("SELECT MONTH"), 
                                     choices = c("NOV_21","DEC_21","JAN_22","FEB_22",
                                                 "MAR_22","APR_22","MAY_22","JUN_22",
                                                 "JUL_22","AUG_22","SEP_22","OCT_22"), 
-                                    selected = "NOV_21")),
+                                    selected = "NOV_21",width = "120px")),
                     
-                    box(title = "TOTAL MONTHLY SALES",status = "primary" , solidHeader = T, width =3, 
+                    box(title = "TOTAL MONTHLY SALES",status = "primary" , solidHeader = T, width =4, 
                         tableOutput("monthly.sales")),
                     
                     box(title = "SALES BY PRODUCT CATEGORY",status = "primary" , solidHeader = T,width =5, 
@@ -442,38 +442,37 @@ ui <- dashboardPage(
                   
                   fluidRow(                   
                     box(title = "SALES BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =5,
-                        dataTableOutput("monthly.sales.prod.subcate")),
+                        DTOutput("monthly.sales.prod.subcate")),
                     
                     box(title = "SALES BY PRODUCT ",status = "primary" , solidHeader = T,width =7,
-                        dataTableOutput("monthly.sales.product"))
+                        DTOutput("monthly.sales.product"))
                     
                   )
                   
                   ),
           
          tabItem(tabName = "sales_revenue",h3("SALES REVENUE ANALYSIS"),
+               
                  fluidRow(
-                   box(status = "primary" , solidHeader = T,width = 3,
+                   box(status = "primary" , solidHeader = T, width = 2,
                        selectInput(inputId = "month.rev", label = "select month", 
                                    choices = c("NOV_21","DEC_21","JAN_22","FEB_22",
                                                "MAR_22","APR_22","MAY_22","JUN_22",
                                                "JUL_22","AUG_22","SEP_22","OCT_22"), 
                                    selected = "NOV_21")
-                   )),
-                 
-                 fluidRow(
+                   ),
                    
-                   box(title = "TOTAL MONTHLY REVENUE",status = "primary" , solidHeader = T, width =4, 
+                   box(title = "TOTAL MONTHLY REVENUE",status = "primary" , solidHeader = T, width =3, 
                        tableOutput("monthly.revenue")),
                    
-                   box(title = "REVENUE BY PRODUCT CATEGORY",status = "primary" , solidHeader = T,width =4, 
+                   box(title = "REVENUE BY PRODUCT CATEGORY",status = "primary" , solidHeader = T,width =3, 
                        tableOutput("monthly.revenue.prod.cate")),
                    
-                   box(title = "REVENUE BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
-                       dataTableOutput("monthly.revenue.prod.subcate")),
+                   box(title = "REVENUE BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =5,
+                       DTOutput("monthly.revenue.prod.subcate")),
                    
-                   box(title = "REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
-                       dataTableOutput("monthly.revenue.product"))
+                   box(title = "REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =7,
+                       DTOutput("monthly.revenue.product"))
                  
                  )
         
@@ -497,11 +496,11 @@ ui <- dashboardPage(
                     
                     
                     box(title = "QUARTERLY SALES BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
-                        dataTableOutput("quarterly.sales.prod.subcate")),
+                        DTOutput("quarterly.sales.prod.subcate")),
                         
                     
                     box(title = "REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
-                        dataTableOutput("quarterly.sales.product"))
+                        DTOutput("quarterly.sales.product"))
                     
                   )),
          
@@ -522,11 +521,11 @@ ui <- dashboardPage(
                    
                    
                    box(title = "QUARTERLY REVENUE BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
-                       dataTableOutput("quarterly.rev.prod.subcate")),
+                       DTOutput("quarterly.rev.prod.subcate")),
                    
                    
                    box(title = " QUARTERLY REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
-                       dataTableOutput("quarterly.rev.product"))
+                       DTOutput("quarterly.rev.product"))
                    
                  )
                  
@@ -546,11 +545,11 @@ ui <- dashboardPage(
                     
                     
                     box(title = "YTD SALES BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
-                        dataTableOutput("ytd.sales.prod.subcate")),
+                        DTOutput("ytd.sales.prod.subcate")),
                     
                     
                     box(title = "YTD SALES BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
-                        dataTableOutput("ytd.sales.product"))
+                        DTOutput("ytd.sales.product"))
                     
                   )),
          
@@ -566,11 +565,11 @@ ui <- dashboardPage(
                     
                     
                     box(title = "YTD REVENUE BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
-                        dataTableOutput("ytd.rev.prod.subcate")),
+                        DTOutput("ytd.rev.prod.subcate")),
                     
                     
                     box(title = " YTD REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
-                        dataTableOutput("ytd.rev.product"))
+                        DTOutput("ytd.rev.product"))
                     
                   ))
            
@@ -585,37 +584,42 @@ server <- function(input, output) {
 # monthly item volume data output
 #---------------------  
   output$monthly.sales <- renderTable((
-    total.monthly.sales(input$month)))
+    total.monthly.sales(input$month)) ,colnames= FALSE )
   
   
   output$monthly.sales.prod.cate <- renderTable((
-    month.sales.prod.cat(input$month)) )
+    month.sales.prod.cat(input$month)), colnames= FALSE  )
   
   
   
-  output$monthly.sales.prod.subcate <- renderDataTable((
-    month.sales.sub.cat(input$month)), options = list(pageLength = 8))
+  output$monthly.sales.prod.subcate <- renderDT((
+    month.sales.sub.cat(input$month)), options = list(pageLength = 8),
+    colnames = c("Sub-Category","Total Sales"))
   
   
-  output$monthly.sales.product <- renderDataTable((
-    month.sales.prod(input$month)), options = list(pageLength = 8))
+  output$monthly.sales.product <- renderDT((
+    month.sales.prod(input$month)), options = list(pageLength = 8),
+    colnames = c("Product","Sub-Category","Total Sales"))
   
   
 #------------------
 # monthly revenue data output
 #---------------------  
   
-  output$monthly.revenue <- renderTable({
-    total.monthly.rev(input$month.rev) })
+  output$monthly.revenue <- renderTable((
+    
+    total.monthly.rev(input$month.rev)), colnames= FALSE   )
   
   output$monthly.revenue.prod.cate <- renderTable({
-    month.rev.prod.cat(input$month.rev) })
+    month.rev.prod.cat(input$month.rev) },colnames= FALSE )
   
-  output$monthly.revenue.prod.subcate <- renderDataTable((
-    month.rev.sub.cat(input$month.rev)), options = list(pageLength = 8))
+  output$monthly.revenue.prod.subcate <- renderDT((
+    month.rev.sub.cat(input$month.rev)), options = list(pageLength = 8),
+    colnames = c("SUBCATEGORY","TOTAL SALES")
+    )
   
   
-  output$monthly.revenue.product <- renderDataTable((
+  output$monthly.revenue.product <- renderDT((
     month.rev.prod(input$month.rev)), options = list(pageLength = 8))
 
 
@@ -631,10 +635,10 @@ server <- function(input, output) {
     q.sales.prod.cat(input$quarter.sales) })
   
   
-  output$quarterly.sales.prod.subcate <- renderDataTable((
+  output$quarterly.sales.prod.subcate <- renderDT((
     q.sales.sub.cat(input$quarter.sales) ), options = list(pageLength = 8))
   
-  output$quarterly.sales.product <- renderDataTable((
+  output$quarterly.sales.product <- renderDT((
     q.sales.prod(input$quarter.sales)), options = list(pageLength = 8))
   
 
@@ -649,10 +653,10 @@ server <- function(input, output) {
     q.rev.prod.cat(input$quarter.revenue) })
   
   
-  output$quarterly.rev.prod.subcate <- renderDataTable((
+  output$quarterly.rev.prod.subcate <- renderDT((
     q.rev.sub.cat(input$quarter.revenue) ), options = list(pageLength = 8))
   
-  output$quarterly.rev.product <- renderDataTable((
+  output$quarterly.rev.product <- renderDT((
     q.rev.prod(input$quarter.revenue)), options = list(pageLength = 8))
   
   #------------------
@@ -666,10 +670,10 @@ server <- function(input, output) {
     ytd.sales.prod.cat()})
   
   
-  output$ytd.sales.prod.subcate <- renderDataTable((
+  output$ytd.sales.prod.subcate <- renderDT((
     ytd.sales.sub.cat()), options = list(pageLength = 8))
   
-  output$ytd.sales.product <- renderDataTable((
+  output$ytd.sales.product <- renderDT((
     ytd.sales.prod()), options = list(pageLength = 8))  
   
   #------------------
@@ -683,10 +687,10 @@ server <- function(input, output) {
     ytd.rev.prod.cat()})
   
   
-  output$ytd.rev.prod.subcate <- renderDataTable((
+  output$ytd.rev.prod.subcate <- renderDT((
     ytd.rev.sub.cat()), options = list(pageLength = 8))
   
-  output$ytd.rev.product <- renderDataTable((
+  output$ytd.rev.product <- renderDT((
     ytd.rev.prod()), options = list(pageLength = 8))   
 }
 shinyApp(ui = ui, server = server)

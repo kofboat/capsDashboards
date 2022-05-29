@@ -1,0 +1,13 @@
+name: newdashboard
+title: newdashboard
+username:
+account: 9x89fh-kofi-boat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6390961
+bundleId: 5956033
+url: https://9x89fh-kofi-boat.shinyapps.io/newdashboard/
+when: 1653791125.99264
+lastSyncTime: 1653791125.99264
+asMultiple: FALSE
+asStatic: FALSE
