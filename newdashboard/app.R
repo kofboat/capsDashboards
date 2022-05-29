@@ -484,52 +484,54 @@ ui <- dashboardPage(
                  ),
          
          
-         tabItem( tabName="item_sales_quarter", "QUARTER SALES",
+         tabItem( tabName="item_sales_quarter",
                   fluidRow(
-                    box(status = "primary" , solidHeader = T,width =3,
-                      selectInput(inputId = "quarter.sales", label = "SELECT QUARTER", 
-                                  choices = c(1,2,3,4), selected = 1)
-                    )),
+                    box(title = "Quarter", status = "primary" , solidHeader = T,width =3,
+                      selectInput(inputId = "quarter.sales", label = h5("Select Quarter"), 
+                                  choices = c(1,2,3,4), selected = 1, width = "120px")),
+                      
+                      box(title = "Total Quarterly Sales",status = "primary" , solidHeader = T,width = 4, 
+                          tableOutput("quarterly.sales")),
+                      
+                      box(title = "Quarterly Sales by Product Category",status = "primary" , solidHeader = T,width = 5,
+                          tableOutput("quarterly.sales.prod.cate"))  
+                    ),
+                  
                   
                   fluidRow(
                     
-                    box(title = "TOTAL QUARTERLY SALES",status = "primary" , solidHeader = T,width = 4, 
-                        tableOutput("quarterly.sales")),
-                    
-                    box(title = "QUARTERLY SALES BY PRODUCT CATEGORY",status = "primary" , solidHeader = T,width = 5,
-                        tableOutput("quarterly.sales.prod.cate")), 
-                    
-                    
-                    box(title = "QUARTERLY SALES BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
+                    box(title = "Quarterly Sales by Product Sub-Category",status = "primary" , solidHeader = T,width =5,
                         DTOutput("quarterly.sales.prod.subcate")),
                         
                     
-                    box(title = "REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
+                    box(title = "Sales by Product ",status = "primary" , solidHeader = T,width =7,
                         DTOutput("quarterly.sales.product"))
                     
                   )),
          
-         tabItem(tabName = "sales_revenue_quarter","QUARTER REVENUE",
+         tabItem(tabName = "sales_revenue_quarter",
                  fluidRow(
-                   box(status = "primary" , solidHeader = T,
-                     selectInput(inputId = "quarter.revenue", label = "SELECT QUARTER", width =3,
-                                 choices = c(1,2,3,4), selected = 1)
-                   )),
+                   box(title = "Quarter",status = "primary" , solidHeader = T, width = 3,
+                     selectInput(inputId = "quarter.revenue", label = h5("Select Quarter"),
+                                 choices = c(1,2,3,4), selected = 1, width = "120px")),
+                     
+                     
+                     box(title = "Total Quarterly Revenue", status = "primary" , solidHeader = T,width =4,
+                         tableOutput("quarterly.rev")),
+                     
+                     box(title = "Quarterly Revenue By Product Category",status = "primary" , solidHeader = T,width =5,
+                         tableOutput("quarterly.rev.prod.cate")) 
+                     
+                   ),
                  
                  fluidRow(
+                  
                    
-                   box(title = "TOTAL QUARTERLY REVENUE", status = "primary" , solidHeader = T,width =4,
-                       tableOutput("quarterly.rev")),
-                   
-                   box(title = "QUARTERLY REVENUE BY PRODUCT CATEGORY",status = "primary" , solidHeader = T,width =4,
-                       tableOutput("quarterly.rev.prod.cate")), 
-                   
-                   
-                   box(title = "QUARTERLY REVENUE BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
+                   box(title = "Quarterly Revenue By Product Sub-Category",status = "primary" , solidHeader = T,width =5,
                        DTOutput("quarterly.rev.prod.subcate")),
                    
                    
-                   box(title = " QUARTERLY REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
+                   box(title = "Quarterly Revenue By Product ",status = "primary" , solidHeader = T,width =7,
                        DTOutput("quarterly.rev.product"))
                    
                  )
@@ -537,46 +539,49 @@ ui <- dashboardPage(
                  ),
          
          
-         tabItem( tabName="item_sales_ytd", "YTD SALES",
+         tabItem( tabName="item_sales_ytd",
                   
                  
                   fluidRow(
                     
-                    box(title = "TOTAL YTD SALES",status = "primary" , solidHeader = T, width =4,
+                    box(title = "Total YTD Sales",status = "primary" , solidHeader = T, width =3,
                         tableOutput("ytd.sales")),
                     
-                    box(title = "YTD SALES BY PRODUCT CATEGORY",status = "primary" , solidHeader = T,width =4,
-                        tableOutput("ytd.sales.prod.cate")), 
+                    box(title = "YTD Sales By Product Category",status = "primary" , solidHeader = T,width =5,
+                        tableOutput("ytd.sales.prod.cate"))
+                    ), 
                     
+                  fluidRow(
                     
-                    box(title = "YTD SALES BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
+                    box(title = "YTD Sales By Product Sub-Category",status = "primary" , solidHeader = T,width =5,
                         DTOutput("ytd.sales.prod.subcate")),
                     
                     
-                    box(title = "YTD SALES BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
+                    box(title = "YTD Sales By Product ",status = "primary" , solidHeader = T,width =7,
                         DTOutput("ytd.sales.product"))
                     
                   )),
          
-         tabItem( tabName = "sales_revenue_ytd","YTD REVENUE",
+         tabItem( tabName = "sales_revenue_ytd",
                   
                   fluidRow(
                     
-                    box(title = "TOTAL YTD REVENUE", status = "primary" , solidHeader = T,width =4,
+                    box(title = "Total YTD Revenue", status = "primary" , solidHeader = T,width =3,
                         tableOutput("ytd.rev")),
                     
-                    box(title = "YTD REVENUE BY PRODUCT CATEGORY",status = "primary" , solidHeader = T,width =4,
-                        tableOutput("ytd.rev.prod.cate")), 
-                    
-                    
-                    box(title = "YTD REVENUE BY PRODUCT SUBCATEGORY",status = "primary" , solidHeader = T,width =4,
-                        DTOutput("ytd.rev.prod.subcate")),
-                    
-                    
-                    box(title = " YTD REVENUE BY PRODUCT ",status = "primary" , solidHeader = T,width =4,
-                        DTOutput("ytd.rev.product"))
-                    
-                  ))
+                    box(title = "YTD Revenue By Product Category",status = "primary" , solidHeader = T,width =5,
+                        tableOutput("ytd.rev.prod.cate"))),
+                  
+                  
+                  fluidRow(box(title = "YTD Revenue By Product Sub-Category",status = "primary" , solidHeader = T,width =5,
+                               DTOutput("ytd.rev.prod.subcate")),
+                           
+                           
+                           box(title = " YTD Revenue By Product",status = "primary" , solidHeader = T,width =7,
+                               DTOutput("ytd.rev.product")))
+                  
+                  
+                  )
            
       )
       
@@ -635,17 +640,19 @@ server <- function(input, output) {
 #---------------------  
 
   output$quarterly.sales <- renderTable({
-    total.q.sales(input$quarter.sales) })
+    total.q.sales(input$quarter.sales) },colnames= FALSE)
   
   output$quarterly.sales.prod.cate <- renderTable({
-    q.sales.prod.cat(input$quarter.sales) })
+    q.sales.prod.cat(input$quarter.sales) },colnames= FALSE)
   
   
   output$quarterly.sales.prod.subcate <- renderDT((
-    q.sales.sub.cat(input$quarter.sales) ), options = list(pageLength = 8))
+    q.sales.sub.cat(input$quarter.sales) ), options = list(pageLength = 8)
+    ,colnames = c("Sub-Category","Total Sales"))
   
   output$quarterly.sales.product <- renderDT((
-    q.sales.prod(input$quarter.sales)), options = list(pageLength = 8))
+    q.sales.prod(input$quarter.sales)), options = list(pageLength = 8),
+    colnames = c("Product","Sub-Category","Total Sales"))
   
 
 #------------------
@@ -653,50 +660,56 @@ server <- function(input, output) {
 #---------------------  
 
   output$quarterly.rev <- renderTable({
-    total.q.rev(input$quarter.revenue) })
+    total.q.rev(input$quarter.revenue) },colnames= FALSE)
   
   output$quarterly.rev.prod.cate <- renderTable({
-    q.rev.prod.cat(input$quarter.revenue) })
+    q.rev.prod.cat(input$quarter.revenue) },colnames= FALSE)
   
   
   output$quarterly.rev.prod.subcate <- renderDT((
-    q.rev.sub.cat(input$quarter.revenue) ), options = list(pageLength = 8))
+    q.rev.sub.cat(input$quarter.revenue) ), options = list(pageLength = 8),
+    colnames = c("Sub-Category","Total Sales"))
   
   output$quarterly.rev.product <- renderDT((
-    q.rev.prod(input$quarter.revenue)), options = list(pageLength = 8))
+    q.rev.prod(input$quarter.revenue)), options = list(pageLength = 8),
+    colnames = c("Product","Sub-Category","Total Sales"))
   
   #------------------
   # YTD SALES  data output
   #---------------------  
   
   output$ytd.sales <- renderTable({
-    total.ytd.sales()})
+    total.ytd.sales()},colnames= FALSE)
   
   output$ytd.sales.prod.cate <- renderTable({
-    ytd.sales.prod.cat()})
+    ytd.sales.prod.cat()},colnames= FALSE)
   
   
   output$ytd.sales.prod.subcate <- renderDT((
-    ytd.sales.sub.cat()), options = list(pageLength = 8))
+    ytd.sales.sub.cat()), options = list(pageLength = 8),
+    colnames = c("Sub-Category","Total Sales"))
   
   output$ytd.sales.product <- renderDT((
-    ytd.sales.prod()), options = list(pageLength = 8))  
+    ytd.sales.prod()), options = list(pageLength = 8),
+    colnames = c("Product","Sub-Category","Total Sales"))  
   
   #------------------
   # YTD REVENUE  data output
   #---------------------  
   
   output$ytd.rev <- renderTable({
-    total.ytd.rev()})
+    total.ytd.rev()},colnames= FALSE)
   
   output$ytd.rev.prod.cate <- renderTable({
-    ytd.rev.prod.cat()})
+    ytd.rev.prod.cat()},colnames= FALSE)
   
   
   output$ytd.rev.prod.subcate <- renderDT((
-    ytd.rev.sub.cat()), options = list(pageLength = 8))
+    ytd.rev.sub.cat()), options = list(pageLength = 8),
+    colnames = c("Sub-Category","Total Sales"))
   
   output$ytd.rev.product <- renderDT((
-    ytd.rev.prod()), options = list(pageLength = 8))   
+    ytd.rev.prod()), options = list(pageLength = 8),
+    colnames = c("Product","Sub-Category","Total Sales"))   
 }
 shinyApp(ui = ui, server = server)
