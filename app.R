@@ -1,7 +1,8 @@
 
 
-library(shiny)
+#library(shiny)
 library(bs4Dash)
+#library(shinydashboardPlus)
 library(tidyverse)
 library(ggplot2)
 library(DT)
@@ -74,442 +75,6 @@ mtd1 <- mtd %>%
 mtd1 <- as_tibble(mtd1)
 mtd1
 
-#-----------------------------------------------------------
-#     GENERATING BUSINESS INSIGHT
-#-----------------------------------------------------------
-#     Sales Volume Analysis
-#
-#------------------------------------------------------------
-#      1. Monthly Volume Analysis
-#-----------------------------------------------------------
-#         A. Monthly sales by product category
-#            
-#-----------------------------------------------------------
-
-month.sales.prod.cat <- function(x){
-  
-  monthly.prod.cat.sales <-  msd1 %>% filter(month == x)  %>% 
-    group_by(prod_cat)%>%
-    summarise(total_sales=sum(qty))
-  monthly.prod.cat.sales
-  
-}
-
-total.monthly.sales <- function(x){
-  total.sales.month <-  msd1 %>% filter(month == x)  %>% 
-  summarise(total_sales=sum(qty))
-total.sales.month
-
-}
-
-
-#--------------------------------------------------------------
-#         B. Monthly sales by product sub_category
-#            
-#-------------------------------------------------------------- 
-month.sales.sub.cat <- function(x){
-  
-  (monthly.sales.sub.cat <-  msd1 %>% filter(month == x)  %>% 
-     group_by(sub_cat)%>%
-     summarise(total_sales=sum(qty))
-  )
-  monthly.sales.sub.cat <- monthly.sales.sub.cat[order(
-                                    -monthly.sales.sub.cat$total_sales),]
-  monthly.sales.sub.cat 
-    
-}             
-
- 
-
-#--------------------------------------------------------------
-#         C. Monthly sales by product 
-#             
-#--------------------------------------------------------------                
-month.sales.prod <- function(x){
-  
-  (monthly.sales.prod <-  msd1 %>% filter(month == x)  %>% 
-     group_by(product,sub_cat)%>%
-     summarise(total_sales=(qty))
-  )
-  monthly.sales.prod<- monthly.sales.prod[order(
-                                      -monthly.sales.prod$total_sales),]
-  monthly.sales.prod
-}             
-
-#-----------------------------------------------------------
-#     4. Monthly Revenue Analysis
-#-----------------------------------------------------------
-#     A.  Monthly sales by product category
-#           
-#-----------------------------------------------------------
-
-month.rev.prod.cat <- function(x){(
-  
-  monthly.rev.prod.cat<-  msd1 %>% filter(month == x)  %>% 
-    group_by(prod_cat)%>%
-    summarise(total_sales=sum(total_sale_price))
-)
-  monthly.rev.prod.cat <- monthly.rev.prod.cat[order(-monthly.rev.prod.cat$total_sales),]
-  monthly.rev.prod.cat
-}
-
-
-#--------------------------------------------------------------
-#     B. Monthly sales by product sub_category
-#         
-#-------------------------------------------------------------- 
-month.rev.sub.cat <- function(x){(
-  
-  monthly.rev.sub.cat<-  msd1 %>% filter(month == x)  %>% 
-    group_by(sub_cat)%>%
-    summarise(total_sales=sum(total_sale_price))
-)
-  monthly.rev.sub.cat<- monthly.rev.sub.cat[order(-monthly.rev.sub.cat$total_sales),]
-  monthly.rev.sub.cat
-}        
-
-
-#--------------------------------------------------------------
-#     C.  Monthly sales by product 
-#         
-#--------------------------------------------------------------                
-month.rev.prod <- function(x){(
-  
-  monthly.rev.prod<-  msd1 %>% filter(month == x)  %>% 
-    group_by(product,sub_cat)%>%
-    summarise(total_sales=(total_sale_price))
-)
-  monthly.rev.prod <- monthly.rev.prod[order(-monthly.rev.prod$total_sales),]
-  monthly.rev.prod
-}  
-
-
-
-#--------------------------------------------------------------
-#     D.  Monthly sales by product 
-#         
-#--------------------------------------------------------------                
-
-total.monthly.rev <- function(x){(
-  
-  monthly.rev<-  msd1 %>% filter(month == x)  %>% 
-    
-    summarise(total_sales=sum(total_sale_price))
-)
-  monthly.rev <- monthly.rev[order(-monthly.rev$total_sales),]
-  monthly.rev
-}
-
-#--------------------------------------------------------------
-#    A. total quarterly sales  
-#         
-#--------------------------------------------------------------
-
-total.q.sales <- function(x){
-  
-  total.qly.sales<-  msd1 %>% filter(quarter == x)  %>% 
-    summarise(total_sales=sum(qty))
-  total.qly.sales
-}
-
-
-
-#         B. Quarterly sales volume by product category     
-#             
-#-------------------------------------------------------------- 
-
-
-q.sales.prod.cat <- function(x){
-  
-  qly.sales.prod.cat<-  msd1 %>% filter(quarter == x)  %>% 
-    group_by(prod_cat)%>%
-    summarise(total_sales=sum(qty))
-  qly.sales.prod.cat
-}
-
-
-
-
-#------------------------------------------------------------
-#         C. Quarterly sales by product sub_cat
-#             
-#----------------------------------------------------------- 
-q.sales.sub.cat <- function(x){
-  
-  ( qly.sales.sub.cat<-  msd1 %>% filter(quarter == x)  %>% 
-      group_by(sub_cat)%>%
-      summarise(total_sales=sum(qty))
-  )
-  qly.sales.sub.cat <- qly.sales.sub.cat[order(-qly.sales.sub.cat$total_sales),]
-  qly.sales.sub.cat
-} 
-
-
-
-#--------------------------------------------------------------
-#        D. Quarterly sales by product 
-#          
-#--------------------------------------------------------------    
-q.sales.prod <- function(x){
-  
-  ( qly.sales.prod  <-  msd1 %>% filter(quarter == x)  %>% 
-      group_by(product,sub_cat)%>%
-      summarise(total_sales=sum(qty))
-  )
-  qly.sales.prod  <- qly.sales.prod[order(-qly.sales.prod$total_sales),]
-  qly.sales.prod
-}  
-
-#------------------------------------------------
-#    A. Total Quarterly revenue 
-#-------------------------------------------------------------- 
-total.q.rev <- function(x){(
-  
-  qtly.rev <-  msd1 %>% filter(quarter == x)  %>% 
-    summarise(total_sales=sum(total_sale_price))
-)
-  qtly.rev
-}
-
-
-#----------------------------------------------------------
-#    B. Quarterly sales by product category       
-#-------------------------------------------------------------- 
-q.rev.prod.cat <- function(x){(
-  
-  qtly.rev.prod.cat <-  msd1 %>% filter(quarter == x)  %>% 
-    group_by(prod_cat)%>%
-    summarise(total_sales=sum(total_sale_price))
-)
-  qtly.rev.prod.cat
-}
-
-#------------------------------------------------------------
-#    C. Quarterly sales by product sub_cat
-#       1.filter data by quarter
-#       2.group by sub_cat 
-#----------------------------------------------------------- 
-q.rev.sub.cat <- function(x){
-  
-  (qtly.rev.sub.cat <-  msd1 %>% filter(quarter == x)  %>% 
-     group_by(sub_cat)%>%
-     summarise(total_sales=sum(total_sale_price))
-  )
-  qtly.rev.sub.cat <- qtly.rev.sub.cat[order(-qtly.rev.sub.cat$total_sales),]
-  qtly.rev.sub.cat
-}             
-
-
-#--------------------------------------------------------------
-#    D. Quarterly sales by product 
-#--------------------------------------------------------------       
- 
-q.rev.prod <- function(x){(
-  
-  qtly.sales.rev.prod <-  msd1 %>% filter(quarter == x)  %>% 
-    group_by(product,sub_cat)%>%
-    summarise(total_sales=sum(total_sale_price))
-)
-  qtly.sales.rev.prod <-  qtly.sales.rev.prod[order(
-                                   - qtly.sales.rev.prod$total_sales),]
-  qtly.sales.rev.prod
-}         
-
-#----------------------------------------------------------
-#        A. YTD total sales
-#----------------------------------------------          
-total.ytd.sales <- function(){(
-  ytd.sales<- msd1 %>%      
-    summarise(total_sales = sum(qty))
-)
-  
-  ytd.sales
-}
-
-#----------------------------------------------------------
-#        B. YTD sales  by product category
-#------------------------------------------------------      
-ytd.sales.prod.cat <- function(){(
-  ytd.prod.sales.cat<- msd1 %>% 
-    group_by(prod_cat) %>% 
-    summarise(total_sales = sum(qty))
-)
-  ytd.prod.sales.cat <- ytd.prod.sales.cat[order(
-                                           -ytd.prod.sales.cat$total_sales),]
-  ytd.prod.sales.cat
-}
-
-
-
-#--------------------------------------------------------------  
-#       C. YTD sales  by product sub_category     
-#---------------------------------------------------------           
-ytd.sales.sub.cat <- function(){(
-  ytd.prod.sales.sub.cat <- msd1 %>% 
-    group_by(sub_cat) %>%
-    summarise(total_sales = sum(qty))
-)
-  ytd.prod.sales.sub.cat <-  ytd.prod.sales.sub.cat[order(
-                                        - ytd.prod.sales.sub.cat$total_sales),]
-  ytd.prod.sales.sub.cat
-}
-
-#-----------------------------------------------------------------
-#       D. YTD sales by product     
-#----------------------------------------------------------------          
-ytd.sales.prod <- function(){(
-  ytd.prod.sales <- msd1 %>% 
-    group_by(product,sub_cat) %>% 
-    summarise(total_sales = sum(qty)) 
-)
-  ytd.prod.sales <- ytd.prod.sales[order(-ytd.prod.sales$total_sales),]
-  ytd.prod.sales
-}
-
-
-#----------------------------------------------------------
-#    A. YTD TOTAL REV    
-#      
-#--------------------------------------------------------------
-total.ytd.rev <-function(){(
-  
-  total.rev <-  msd1 %>% 
-    
-    summarise(total_sales = sum(total_sale_price))
-)
-  total.rev
-  
-}
-
-#----------------------------------------------------------
-#    B. YTD REV by product category
-#--------------------------------------------------------------
-ytd.rev.prod.cat <-function(){(
-  
-  ytd.prod.rev.cat <-  msd1 %>% 
-    group_by(prod_cat) %>%
-    summarise(total_sales = sum(total_sale_price))
-)
-  ytd.prod.rev.cat
-  
-}
-
-#------------------------------------------------------------
-#    C. YTD REV by product sub_cat        
-#----------------------------------------------------------- 
-ytd.rev.sub.cat <- function(){(
-  
-  ytd.prod.rev.sub.cat <-  msd1 %>% 
-    group_by(sub_cat)%>%
-    summarise(total_sales=sum(total_sale_price))
-)
-  ytd.prod.rev.sub.cat <- ytd.prod.rev.sub.cat[order(
-    -ytd.prod.rev.sub.cat$total_sales),]
-  ytd.prod.rev.sub.cat
-}             
-
-#--------------------------------------------------------------
-#    D. YTD REV by product     
-#-------------------------------------------------------------- 
-ytd.rev.prod <- function(){(
-  ytd.prod.rev <-  msd1  %>% 
-    group_by(product,sub_cat)%>%
-    summarise(total_sales=sum(total_sale_price))
-)
-  ytd.prod.rev <-  ytd.prod.rev[order(- ytd.prod.rev$total_sales),]
-  ytd.prod.rev
-}  
-#------------------------------------
-
-#---ADDITIONS-------------
-
-#-----------------------------
-#  monthly cost of sale
-#-----------------------------
-
-monthly.cost.of.sale <- function(x){
-  cost.of.sale <- msd1 %>% filter( month == x) %>%
-    summarise(cost_of_sale = sum(total_cost_price))
-  
-  cost.of.sale 
-}
-monthly.cost.of.sale("APR_22")
-
-#-------------------------
-#  monthly Gross profit 
-#----------------------
-
-monthly.gross.profit <- function(x){
-  gross.profit <- msd1 %>% filter( month == x) %>%
-    summarise(gross.profit.loss = sum(gross_profit))
-  
-  gross.profit
-}
-monthly.gross.profit("MAR_22")
-
-
-#-------------------------
-#  monthly Gross  MARGIN
-#----------------------
-
-monthly.avg.gross.margin <- function(x){
-  gross.profit.margin <- msd1 %>% filter( month == x) %>%
-    summarise(avg.gross.profit.margin = mean(gross_margin))
-  
-  gross.profit.margin
-}
-monthly.avg.gross.margin("MAR_22")
-
-#-------------------------
-#  monthly Gross profit 
-#----------------------
-
-#-----------------------
-# monthly Expense
-#------------------------
-monthly.expense <- function(x){
-  monthly.expense <- med %>% filter( month == x) %>%
-    summarise( expense= sum(amount))
-  
-  monthly.expense
-}
-monthly.expense("DEC_21")
-
-#--------------------
-# Net profit or loss
-#--------------------
-
-
-
-#---------------------
-# number of transactions
-#---------------------
-
-daily.transactions <- function(x){
-  
-  visitors <- mtd1 %>% filter (month == "APR_22") %>%
-    count(Date) 
-  (visitors <- visitors[order(-visitors$n),])
-  
-  visitors %>% mutate(Date=fct_reorder(Date, -n)) %>%
-    ggplot() +
-    geom_col(mapping = aes(Date,n))
-  
-}
-
-daily.transactions("APR_22")
-
-
-monthly.transactions <- function(x){
-  
-  monthly.unique.visitors <- mtd1 %>% filter (month == x) %>%
-    
-    summarise(monthly.visitors = n_distinct(transactions)) 
-  monthly.unique.visitors <- as_tibble(monthly.unique.visitors)
-  monthly.unique.visitors
-}
-
-monthly.transactions("APR_22")
 
 
 
@@ -525,17 +90,13 @@ ui <- dashboardPage(
         
         sidebarMenu(
          menuItem("HOME", tabName = "home", icon = icon("home", lib="font-awesome")),    
-         menuItem("MONTHLY VIEW", tabName = "month", icon = icon("binoculars", lib = "font-awesome"), 
-                  menuSubItem("ITEM SALES", tabName="item_sales",icon = icon("capsules", lib = "font-awesome")),
-                  menuSubItem("SALES REVENUE", tabName = "sales_revenue", icon = icon("credit-card", lib = "font-awesome"))),
+         menuItem("MONTHLY VIEW", tabName = "month", icon = icon("binoculars", lib = "font-awesome")), 
+                  
+         menuItem("QUARTERLY VIEW", tabName = "quarter",icon = icon("binoculars", lib = "font-awesome")),  
+                  
          
-         menuItem("QUARTERLY VIEW", tabName = "quarter",icon = icon("binoculars", lib = "font-awesome"),  
-                  menuSubItem("ITEM SALES", tabName="item_sales_quarter",icon = icon("capsules", lib = "font-awesome")),
-                  menuSubItem("SALES REVENUE", tabName = "sales_revenue_quarter", icon = icon("credit-card", lib = "font-awesome"))),
-         
-         menuItem("YEAR TO DATE VIEW", tabName = "YTD", icon = icon("binoculars", lib = "font-awesome"), 
-                  menuSubItem("ITEM SALES", tabName="item_sales_ytd",icon = icon("capsules", lib = "font-awesome")),
-                  menuSubItem("SALES REVENUE", tabName = "sales_revenue_ytd", icon = icon("credit-card", lib = "font-awesome")))
+         menuItem("YEAR TO DATE VIEW", tabName = "YTD", icon = icon("binoculars", lib = "font-awesome"))
+                 
          
          
         )
@@ -544,38 +105,54 @@ ui <- dashboardPage(
       dashboardBody(
         
         tabItems(
-          tabItem(tabName = "home", h4(p("Welcome to CAPS Pharmacy performance site 
-                                      where you can drill down to the business 
-                                      peformance from monthly to year to date data analysis." 
-                                      
-                                      ))),
-          tabItem(tabName = "item_sales", h3("SALES VOLUME ANALYSIS"),
+          tabItem(tabName = "home", h4(p("Welcome to CAPS Pharmacy performance site. The home page 
+                                          provides an overview of the financial and operational 
+                                          performance of the business from a monthy, quarterly and 
+                                          year-to-date view.
+                                           Additional detail is provided in the other tabs for both
+                                           financial and operational data." ))
+                  
+                  ),
+          
+          
+          
+          
+          
+          
+          
+          tabItem(tabName = "month", 
                   
                   fluidRow(
                     
-                    box(title = "Month", width = 3 ,status = "primary" , solidHeader = T,
-                        selectInput(inputId = "month", label = h5("Select Month"), 
+                    valueBox("MONTHLY DATA OVERVIEW", "",icon = icon("binoculars") , color = "success", width = 5),
+                    
+                    box(title = "Month", width = 5 ,status = "success" , solidHeader = T, height = "100",
+                        selectInput(inputId = "month", label = h6("Select Month"), 
                                     choices = c("NOV_21","DEC_21","JAN_22","FEB_22",
                                                 "MAR_22","APR_22","MAY_22","JUN_22",
                                                 "JUL_22","AUG_22","SEP_22","OCT_22"), 
-                                    selected = "NOV_21",width = "120px")),
+                                    selected = "NOV_21",width = "300px"))
                     
-                    box(title = "Total Monthly Sales",status = "primary" , solidHeader = T, width =4, 
-                        tableOutput("monthly.sales")),
                     
-                    box(title = "Sales By Product Category",status = "primary" , solidHeader = T,width =5, 
-                        tableOutput("monthly.sales.prod.cate"))
-                  ),
+                    ),
                   
-                  fluidRow(                   
-                    box(title = "Sales By  Product Sub-Category",status = "primary" , solidHeader = T,width =5,
-                        DTOutput("monthly.sales.prod.subcate")),
-                    
-                    box(title = "Sales By Product ",status = "primary" , solidHeader = T,width =7,
-                        DTOutput("monthly.sales.product"))
-                    
-                  )
                   
+                 fluidRow(
+                   
+                   valueBoxOutput("monthly.revenue", width = 4),
+                   valueBoxOutput("monthly.cost.of.sale", width = 4),
+                   valueBoxOutput("monthly.gross.profit", width = 4)
+                   
+                   ),
+                  
+                 fluidRow(
+                   
+                   valueBoxOutput("monthly.expense", width = 3),
+                   valueBoxOutput("monthly.net.profit", width = 3),
+                   valueBoxOutput("monthly.item.sales", width = 3),
+                   valueBoxOutput("monthly.visitors", width = 3)
+                   
+                 )
                   ),
           
          tabItem(tabName = "sales_revenue",h3("SALES REVENUE ANALYSIS"),
@@ -717,11 +294,450 @@ ui <- dashboardPage(
 )   
 server <- function(input, output) {
   
+  
+  #-----------------------------------------------------------
+  #     GENERATING BUSINESS INSIGHT
+  #-----------------------------------------------------------
+  #     Sales Volume Analysis
+  #
+  #------------------------------------------------------------
+  #      1. Monthly Volume Analysis
+  #-----------------------------------------------------------
+  #         A. Monthly sales by product category
+  #            
+  #-----------------------------------------------------------
+  
+  month.sales.prod.cat <- function(x){
+    
+    monthly.prod.cat.sales <-  msd1 %>% filter(month == x)  %>% 
+      group_by(prod_cat)%>%
+      summarise(total_sales=sum(qty))
+    monthly.prod.cat.sales
+    
+  }
+  
+  total.monthly.sales <- function(x){
+    total.sales.month <-  msd1 %>% filter(month == x)  %>% 
+      summarise(total_sales=sum(qty))
+    total.sales.month
+    
+  }
+  
+  
+  #--------------------------------------------------------------
+  #         B. Monthly sales by product sub_category
+  #            
+  #-------------------------------------------------------------- 
+  month.sales.sub.cat <- function(x){
+    
+    (monthly.sales.sub.cat <-  msd1 %>% filter(month == x)  %>% 
+       group_by(sub_cat)%>%
+       summarise(total_sales=sum(qty))
+    )
+    monthly.sales.sub.cat <- monthly.sales.sub.cat[order(
+      -monthly.sales.sub.cat$total_sales),]
+    monthly.sales.sub.cat 
+    
+  }             
+  
+  
+  
+  #--------------------------------------------------------------
+  #         C. Monthly sales by product 
+  #             
+  #--------------------------------------------------------------                
+  month.sales.prod <- function(x){
+    
+    (monthly.sales.prod <-  msd1 %>% filter(month == x)  %>% 
+       group_by(product,sub_cat)%>%
+       summarise(total_sales=(qty))
+    )
+    monthly.sales.prod<- monthly.sales.prod[order(
+      -monthly.sales.prod$total_sales),]
+    monthly.sales.prod
+  }             
+  
+  #-----------------------------------------------------------
+  #     4. Monthly Revenue Analysis
+  #-----------------------------------------------------------
+  #     A.  Monthly sales by product category
+  #           
+  #-----------------------------------------------------------
+  
+  month.rev.prod.cat <- function(x){(
+    
+    monthly.rev.prod.cat<-  msd1 %>% filter(month == x)  %>% 
+      group_by(prod_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    monthly.rev.prod.cat <- monthly.rev.prod.cat[order(-monthly.rev.prod.cat$total_sales),]
+    monthly.rev.prod.cat
+  }
+  
+  
+  #--------------------------------------------------------------
+  #     B. Monthly sales by product sub_category
+  #         
+  #-------------------------------------------------------------- 
+  month.rev.sub.cat <- function(x){(
+    
+    monthly.rev.sub.cat<-  msd1 %>% filter(month == x)  %>% 
+      group_by(sub_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    monthly.rev.sub.cat<- monthly.rev.sub.cat[order(-monthly.rev.sub.cat$total_sales),]
+    monthly.rev.sub.cat
+  }        
+  
+  
+  #--------------------------------------------------------------
+  #     C.  Monthly sales by product 
+  #         
+  #--------------------------------------------------------------                
+  month.rev.prod <- function(x){(
+    
+    monthly.rev.prod<-  msd1 %>% filter(month == x)  %>% 
+      group_by(product,sub_cat)%>%
+      summarise(total_sales=(total_sale_price))
+  )
+    monthly.rev.prod <- monthly.rev.prod[order(-monthly.rev.prod$total_sales),]
+    monthly.rev.prod
+  }  
+  
+  
+  
+  #--------------------------------------------------------------
+  #     D.  Monthly sales by product 
+  #         
+  #--------------------------------------------------------------                
+  
+  total.monthly.rev <- function(x){(
+    
+    monthly.rev<-  msd1 %>% filter(month == x)  %>% 
+      
+      summarise(total_sales=sum(total_sale_price))
+  )
+    monthly.rev <- monthly.rev[order(-monthly.rev$total_sales),]
+    monthly.rev
+  }
+  
+  #--------------------------------------------------------------
+  #    A. total quarterly sales  
+  #         
+  #--------------------------------------------------------------
+  
+  total.q.sales <- function(x){
+    
+    total.qly.sales<-  msd1 %>% filter(quarter == x)  %>% 
+      summarise(total_sales=sum(qty))
+    total.qly.sales
+  }
+  
+  
+  
+  #         B. Quarterly sales volume by product category     
+  #             
+  #-------------------------------------------------------------- 
+  
+  
+  q.sales.prod.cat <- function(x){
+    
+    qly.sales.prod.cat<-  msd1 %>% filter(quarter == x)  %>% 
+      group_by(prod_cat)%>%
+      summarise(total_sales=sum(qty))
+    qly.sales.prod.cat
+  }
+  
+  
+  
+  
+  #------------------------------------------------------------
+  #         C. Quarterly sales by product sub_cat
+  #             
+  #----------------------------------------------------------- 
+  q.sales.sub.cat <- function(x){
+    
+    ( qly.sales.sub.cat<-  msd1 %>% filter(quarter == x)  %>% 
+        group_by(sub_cat)%>%
+        summarise(total_sales=sum(qty))
+    )
+    qly.sales.sub.cat <- qly.sales.sub.cat[order(-qly.sales.sub.cat$total_sales),]
+    qly.sales.sub.cat
+  } 
+  
+  
+  
+  #--------------------------------------------------------------
+  #        D. Quarterly sales by product 
+  #          
+  #--------------------------------------------------------------    
+  q.sales.prod <- function(x){
+    
+    ( qly.sales.prod  <-  msd1 %>% filter(quarter == x)  %>% 
+        group_by(product,sub_cat)%>%
+        summarise(total_sales=sum(qty))
+    )
+    qly.sales.prod  <- qly.sales.prod[order(-qly.sales.prod$total_sales),]
+    qly.sales.prod
+  }  
+  
+  #------------------------------------------------
+  #    A. Total Quarterly revenue 
+  #-------------------------------------------------------------- 
+  total.q.rev <- function(x){(
+    
+    qtly.rev <-  msd1 %>% filter(quarter == x)  %>% 
+      summarise(total_sales=sum(total_sale_price))
+  )
+    qtly.rev
+  }
+  
+  
+  #----------------------------------------------------------
+  #    B. Quarterly sales by product category       
+  #-------------------------------------------------------------- 
+  q.rev.prod.cat <- function(x){(
+    
+    qtly.rev.prod.cat <-  msd1 %>% filter(quarter == x)  %>% 
+      group_by(prod_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    qtly.rev.prod.cat
+  }
+  
+  #------------------------------------------------------------
+  #    C. Quarterly sales by product sub_cat
+  #       1.filter data by quarter
+  #       2.group by sub_cat 
+  #----------------------------------------------------------- 
+  q.rev.sub.cat <- function(x){
+    
+    (qtly.rev.sub.cat <-  msd1 %>% filter(quarter == x)  %>% 
+       group_by(sub_cat)%>%
+       summarise(total_sales=sum(total_sale_price))
+    )
+    qtly.rev.sub.cat <- qtly.rev.sub.cat[order(-qtly.rev.sub.cat$total_sales),]
+    qtly.rev.sub.cat
+  }             
+  
+  
+  #--------------------------------------------------------------
+  #    D. Quarterly sales by product 
+  #--------------------------------------------------------------       
+  
+  q.rev.prod <- function(x){(
+    
+    qtly.sales.rev.prod <-  msd1 %>% filter(quarter == x)  %>% 
+      group_by(product,sub_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    qtly.sales.rev.prod <-  qtly.sales.rev.prod[order(
+      - qtly.sales.rev.prod$total_sales),]
+    qtly.sales.rev.prod
+  }         
+  
+  #----------------------------------------------------------
+  #        A. YTD total sales
+  #----------------------------------------------          
+  total.ytd.sales <- function(){(
+    ytd.sales<- msd1 %>%      
+      summarise(total_sales = sum(qty))
+  )
+    
+    ytd.sales
+  }
+  
+  #----------------------------------------------------------
+  #        B. YTD sales  by product category
+  #------------------------------------------------------      
+  ytd.sales.prod.cat <- function(){(
+    ytd.prod.sales.cat<- msd1 %>% 
+      group_by(prod_cat) %>% 
+      summarise(total_sales = sum(qty))
+  )
+    ytd.prod.sales.cat <- ytd.prod.sales.cat[order(
+      -ytd.prod.sales.cat$total_sales),]
+    ytd.prod.sales.cat
+  }
+  
+  
+  
+  #--------------------------------------------------------------  
+  #       C. YTD sales  by product sub_category     
+  #---------------------------------------------------------           
+  ytd.sales.sub.cat <- function(){(
+    ytd.prod.sales.sub.cat <- msd1 %>% 
+      group_by(sub_cat) %>%
+      summarise(total_sales = sum(qty))
+  )
+    ytd.prod.sales.sub.cat <-  ytd.prod.sales.sub.cat[order(
+      - ytd.prod.sales.sub.cat$total_sales),]
+    ytd.prod.sales.sub.cat
+  }
+  
+  #-----------------------------------------------------------------
+  #       D. YTD sales by product     
+  #----------------------------------------------------------------          
+  ytd.sales.prod <- function(){(
+    ytd.prod.sales <- msd1 %>% 
+      group_by(product,sub_cat) %>% 
+      summarise(total_sales = sum(qty)) 
+  )
+    ytd.prod.sales <- ytd.prod.sales[order(-ytd.prod.sales$total_sales),]
+    ytd.prod.sales
+  }
+  
+  
+  #----------------------------------------------------------
+  #    A. YTD TOTAL REV    
+  #      
+  #--------------------------------------------------------------
+  total.ytd.rev <-function(){(
+    
+    total.rev <-  msd1 %>% 
+      
+      summarise(total_sales = sum(total_sale_price))
+  )
+    total.rev
+    
+  }
+  
+  #----------------------------------------------------------
+  #    B. YTD REV by product category
+  #--------------------------------------------------------------
+  ytd.rev.prod.cat <-function(){(
+    
+    ytd.prod.rev.cat <-  msd1 %>% 
+      group_by(prod_cat) %>%
+      summarise(total_sales = sum(total_sale_price))
+  )
+    ytd.prod.rev.cat
+    
+  }
+  
+  #------------------------------------------------------------
+  #    C. YTD REV by product sub_cat        
+  #----------------------------------------------------------- 
+  ytd.rev.sub.cat <- function(){(
+    
+    ytd.prod.rev.sub.cat <-  msd1 %>% 
+      group_by(sub_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    ytd.prod.rev.sub.cat <- ytd.prod.rev.sub.cat[order(
+      -ytd.prod.rev.sub.cat$total_sales),]
+    ytd.prod.rev.sub.cat
+  }             
+  
+  #--------------------------------------------------------------
+  #    D. YTD REV by product     
+  #-------------------------------------------------------------- 
+  ytd.rev.prod <- function(){(
+    ytd.prod.rev <-  msd1  %>% 
+      group_by(product,sub_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    ytd.prod.rev <-  ytd.prod.rev[order(- ytd.prod.rev$total_sales),]
+    ytd.prod.rev
+  }  
+  #------------------------------------
+  
+  #---ADDITIONS-------------
+  
+  #-----------------------------
+  #  monthly cost of sale
+  #-----------------------------
+  
+  monthly.cost.of.sale <- function(x){
+    cost.of.sale <- msd1 %>% filter( month == x) %>%
+      summarise(cost_of_sale = sum(total_cost_price))
+    
+    cost.of.sale 
+  }
+  monthly.cost.of.sale("APR_22")
+  
+  #-------------------------
+  #  monthly Gross profit 
+  #----------------------
+  
+  monthly.gross.profit <- function(x){
+    gross.profit <- msd1 %>% filter( month == x) %>%
+      summarise(gross.profit.loss = sum(gross_profit))
+    
+    gross.profit
+  }
+  monthly.gross.profit("MAR_22")
+  
+  
+  #-------------------------
+  #  monthly Gross  MARGIN
+  #----------------------
+  
+  monthly.avg.gross.margin <- function(x){
+    gross.profit.margin <- msd1 %>% filter( month == x) %>%
+      summarise(avg.gross.profit.margin = mean(gross_margin))
+    
+    gross.profit.margin
+  }
+  monthly.avg.gross.margin("MAR_22")
+  
+  #-------------------------
+  #  monthly Gross profit 
+  #----------------------
+  
+  #-----------------------
+  # monthly Expense
+  #------------------------
+  monthly.expense <- function(x){
+    monthly.expense <- med %>% filter( month == x) %>%
+      summarise( expense= sum(amount))
+    
+    monthly.expense
+  }
+  monthly.expense("DEC_21")
+  
+  #--------------------
+  # Net profit or loss
+  #--------------------
+  
+  
+  
+  #---------------------
+  # number of transactions
+  #---------------------
+  
+  daily.transactions <- function(x){
+    
+    visitors <- mtd1 %>% filter (month == "APR_22") %>%
+      count(Date) 
+    (visitors <- visitors[order(-visitors$n),])
+    
+    visitors %>% mutate(Date=fct_reorder(Date, -n)) %>%
+      ggplot() +
+      geom_col(mapping = aes(Date,n))
+    
+  }
+  
+  daily.transactions("APR_22")
+  
+  
+  monthly.transactions <- function(x){
+    
+    monthly.unique.visitors <- mtd1 %>% filter (month == x) %>%
+      
+      summarise(monthly.visitors = n_distinct(transactions)) 
+    monthly.unique.visitors <- as_tibble(monthly.unique.visitors)
+    monthly.unique.visitors
+  }
+  
+  monthly.transactions("APR_22")
+  
+  
 #------------------
-# monthly item volume data output
+# monthly sales data output
 #---------------------  
-  output$monthly.sales <- renderTable((
-    total.monthly.sales(input$month)) ,colnames= FALSE )
+  output$monthly.item.sales <- renderValueBox((
+    total.monthly.sales(input$month))) 
   
   
   output$monthly.sales.prod.cate <- renderTable((
@@ -738,14 +754,17 @@ server <- function(input, output) {
     month.sales.prod(input$month)), options = list(pageLength = 8),
     colnames = c("Product","Sub-Category","Total Sales"))
   
+  output$monthly.visitors <- 
   
 #------------------
 # monthly revenue data output
 #---------------------  
   
-  output$monthly.revenue <- renderTable((
+  output$monthly.revenue <- renderValueBox({
+    valueBox(total.monthly.rev(input$month.rev),"Monthly Revenue", 
+             icon = icon("credit-card"), color ="success")
     
-    total.monthly.rev(input$month.rev)), colnames= FALSE   )
+      })
   
   output$monthly.revenue.prod.cate <- renderTable({
     month.rev.prod.cat(input$month.rev) },colnames= FALSE )
@@ -763,7 +782,7 @@ server <- function(input, output) {
 
 
 #------------------
-# quarterly sales volume data output
+# quarterly  data output
 #---------------------  
 
   output$quarterly.sales <- renderTable({
@@ -802,7 +821,7 @@ server <- function(input, output) {
     colnames = c("Product","Sub-Category","Total Sales"))
   
   #------------------
-  # YTD SALES  data output
+  # YTD   data output
   #---------------------  
   
   output$ytd.sales <- renderTable({
