@@ -133,7 +133,7 @@ ui <- dashboardPage(
                    
                    infoBoxOutput("monthly.revenue", width = 4),
                    infoBoxOutput("monthly.cost.of.sale", width = 4),
-                   infoBoxOutput("monthly.gross.profit.margin", width = 4)
+                   infoBoxOutput("monthly.gross.profit", width = 4)
                    
                    ),
                   
@@ -146,14 +146,20 @@ ui <- dashboardPage(
                  ),
                  
                  fluidRow(
-                   
+                   infoBoxOutput("monthly.gross.profit.percent", width = 4),
                    infoBoxOutput("monthly.net.profit", width = 4),
-                   infoBoxOutput("monthly.closing.inventory", width = 4),
-                   infoBoxOutput("monthly.closing.bankrec", width = 4)
+                   infoBoxOutput("monthly.net.profit.percent", width = 4),
                    
-                 )   
+                   
+                 ),   
                  
-                 
+                 fluidRow(
+                   infoBoxOutput("monthly.inventory", width = 4),
+                   infoBoxOutput("monthly.bankrec", width = 4),
+                   infoBoxOutput("monthly.items.transac", width = 4),
+                   
+                   
+                 )  
                  
                  
                   )
@@ -193,10 +199,17 @@ server <- function(input, output) {
       summarise( expense= sum(amount))
         monthly.expense  }
   
-  monthly.avg.gross.margin <- function(x){
+  monthly.avg.gross.profit.percent<- function(x){
      gross.profit.margin <- msd1 %>% filter( month == x) %>%
       summarise(avg.gross.profit.margin = round(mean(gross_margin), 2))
         gross.profit.margin  }
+  
+  monthly.gross.prof <- function(x){
+    
+    gross.prof <- monthly.rev(x) - monthly.cost.of.sale(x) 
+    round(gross.prof,2)
+  }
+  
   
   monthly.cost.of.sale <- function(x){
     cost.of.sale <- msd1 %>% filter( month == x) %>%
@@ -204,10 +217,22 @@ server <- function(input, output) {
       cost.of.sale  }
   
     
+    monthly.net.prof.percent <- function(x){
+      net.profit.percent <- round( ((monthly.rev(x) - (monthly.cost.of.sale(x) + monthly.expense(x)))
+                     /monthly.rev(x)) * 100, 2)
+                  net.profit.percent
+    } 
     
+  monthly.net.prof <- function(x){
+    
+    net.profit <- (monthly.rev(x) - (monthly.cost.of.sale(x) + monthly.expense(x)))
+    round(net.profit,2)
+  }
   
-  
-  
+  monthly.items.transaction <- function(x){
+    items.transaction <- monthly.item.sales(x) /  monthly.transactions(x)
+    items.transaction
+  } 
   
   
   #output logic
@@ -225,9 +250,10 @@ server <- function(input, output) {
     infoBox("Expense",monthly.expense(input$month), icon = icon("money-bill"), 
             color = "success")})
   
-  output$monthly.gross.profit.margin <- renderInfoBox({
-    infoBox("Gross Margin",monthly.avg.gross.margin(input$month), 
+  output$monthly.gross.profit.percent <- renderInfoBox({
+    infoBox("Gross profit %",monthly.avg.gross.profit.percent(input$month), 
             icon = icon("money-bill"), color = "success")})
+  
   
   
   output$monthly.cost.of.sale <- renderInfoBox({
@@ -238,14 +264,25 @@ server <- function(input, output) {
     infoBox("Items sold",monthly.item.sales(input$month), 
             icon = icon("money-bill"), color = "success")})
   
-  output$monthly.net.profit <- renderInfoBox({
-    infoBox("Net profit", monthly.net.prof, icon=icon("money-bill"),
+  output$monthly.net.profit.percent <- renderInfoBox({
+    infoBox("Net profit %", monthly.net.prof.percent(input$month), icon=icon("money-bill"),
             color = "success")
   })
   
+  output$monthly.net.profit <- renderInfoBox({
+    infoBox("Net profit", monthly.net.prof(input$month), icon=icon("money-bill"),
+            color = "success")
+  })
   
+  output$monthly.gross.profit <- renderInfoBox({
+    infoBox("Gross profit", monthly.gross.prof(input$month), icon=icon("money-bill"),
+            color = "success")
+  })
   
-  
+  output$monthly.items.transac <- renderInfoBox({
+    infoBox("Items per transaction", monthly.items.transaction(input$month), icon=icon("money-bill"),
+            color = "success")
+  })
   
   
   
