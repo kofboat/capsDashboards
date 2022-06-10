@@ -1,6 +1,6 @@
 
 
-library(shiny)
+#library(shiny)
 library(bs4Dash)
 #library(shinydashboardPlus)
 library(tidyverse)
@@ -203,9 +203,6 @@ server <- function(input, output) {
       summarise(cost_of_sale = sum(total_cost_price))
       cost.of.sale  }
   
-  monthly.net.prof <- monthly.rev(x) - 
-    (monthly.cost.of.sale(x) + monthly.expense(x))
-    
     
     
   
