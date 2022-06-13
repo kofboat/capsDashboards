@@ -10,10 +10,10 @@ library(DT)
 #     IMPORT DATA
 #----------------------------------------------------------
 
-msd <- read_csv("master.data.csv")
-med <- read_csv("expense.account.csv")%>% as_tibble()
-mtd <- read_csv("Traffic.csv") 
-
+msd  <- read_csv("master.data.csv")
+med  <- read_csv("expense.account.csv")%>% as_tibble()
+mtd  <- read_csv("Traffic.csv") 
+mibd <- read.csv("inventory.balance.csv")
 #-----------------------------------------------------------
 #     DATA CLEANING AND PREPARATION
 #------------------------------------------------------------
@@ -154,7 +154,7 @@ ui <- dashboardPage(
                  ),   
                  
                  fluidRow(
-                   infoBoxOutput("monthly.inventory", width = 4),
+                   infoBoxOutput("monthly.inventory.closing.bal", width = 4),
                    infoBoxOutput("monthly.bankrec", width = 4),
                    infoBoxOutput("monthly.items.transac", width = 4),
                    
@@ -234,6 +234,23 @@ server <- function(input, output) {
     items.transaction
   } 
   
+  monthly.bank.reconiliation <- function(x){
+    
+    bank <- monthly.rev(x) - (monthly.expense(x) + monthly.inventory.purchase(x))
+    round(bank,2)
+    
+  }
+  
+  
+  monthly.closing.balance <- function(x){
+    
+    monthly.open.bal(x) + monthly.inventory.purchase(x) -  monthly.cost.of.sale(x)
+    
+  }
+  
+  
+  
+  
   
   #output logic
   
@@ -285,7 +302,15 @@ server <- function(input, output) {
   })
   
   
+  output$monthly.bankrec <- renderInfoBox({
+    infoBox("Bank", monthly.bank.reconiliation(input$month), icon=icon("money-bill"),
+            color = "success")
+  })
   
+  output$monthly.inventory.closing.bal <- renderInfoBox({
+    infoBox("Inventory", monthly.closing.balance(input$month), icon=icon("money-bill"),
+            color = "success")
+  })
   
   
   
