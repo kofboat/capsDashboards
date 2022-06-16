@@ -18,10 +18,10 @@ ipa    <- read_csv("inventory.purchase.account.csv")
 #     DATA CLEANING AND PREPARATION
 #------------------------------------------------------------
 
-msd <- msd %>%
-  select(!c(12:19))  # delete empty columns
+#msd <- msd %>%
+  #select(!c(12:19))  # delete empty columns
 # create new , reorganize and delete variables
-msd1 <- msd%>%
+msd1 <- msd %>%
   mutate(prod_cat = category,
          gross_margin = round((gross_profit/ total_sale_price *100),2),
          sub_cat = sub_category,
@@ -158,7 +158,7 @@ ui <- dashboardPage(
                          gradient = FALSE,elevation = 4,boxToolSize = "sm",
                          headerBorder = TRUE,dropdownMenu = NULL,
                          sidebar = NULL,id = "year.selector",
-                         selectInput(inputId = "year",
+                         selectInput(inputId = "year.month",
                                      label = h6("Select Year"), 
                                      choices = c(2021,2022,2023,2024,2025), 
                                      selected = 2021 ,width = "200px"))
@@ -231,7 +231,7 @@ ui <- dashboardPage(
                    collapsible = T,
                    elevation = 4,
                    title = "Revenue",
-                   selected = "category",
+                   selected = "Product category",
                    status = "info",
                    side ="right", 
                    solidHeader = T,
@@ -255,6 +255,8 @@ ui <- dashboardPage(
                  ),
                  tabBox(
                    id = "monthly.items.data",
+                   collapsible = T,
+                   elevation = 4,
                    title = "Items sold",
                    side = "right",
                    selected = "Product category",
@@ -294,7 +296,7 @@ ui <- dashboardPage(
                           headerBorder = TRUE,dropdownMenu = NULL,
                           sidebar = NULL,id = "quarter.selector",
                           selectInput(inputId = "quarter",
-                                      label = h6("Select Month"), 
+                                      label = h6("Select Quarter"), 
                                       choices =c(1,2,3,4 ), selected = 1,
                                       width="200px")),       
            
@@ -306,7 +308,7 @@ ui <- dashboardPage(
                          gradient = FALSE,elevation = 4,boxToolSize = "sm",
                          headerBorder = TRUE,dropdownMenu = NULL,
                          sidebar = NULL,id = "year.selector",
-                         selectInput(inputId = "year",
+                         selectInput(inputId = "year.quarter",
                                      label = h6("Select Year"), 
                                      choices = c(2021,2022,2023,2024,2025), 
                                      selected = 2021 ,width = "200px"))
@@ -335,9 +337,9 @@ ui <- dashboardPage(
            ),
            
            fluidRow(
-             infoBoxOutput("quarterly.items.transac", width = 4),
              infoBoxOutput("quarterly.inventory.closing.bal", width = 4),
-             infoBoxOutput("quarterly.bankrec", width = 4)
+             infoBoxOutput("quarterly.bankrec", width = 4), 
+             infoBoxOutput("quarterly.items.transac", width = 4)
            ),
             
           fluidRow(
@@ -416,26 +418,13 @@ ui <- dashboardPage(
           )),
        
        
-       tabItem(tabName = "YTD","ytd adat", 
+       tabItem(tabName = "YTD", 
                
                fluidRow(
-                 valueBox("YEAR-TO-DATE DATA OVERVIEW", "",
+                 valueBox("YEAR-TO-DATE OVERVIEW", "",
                           icon = icon("binoculars"), color = "maroon", 
                           width = 4, elevation = 4),
-                 
-                 bs4Card(title = "Quarter", footer = NULL,
-                         status = "maroon", solidHeader = T,width = 4,
-                         background = NULL,height = NULL,icon = NULL,
-                         collapsible = TRUE,collapsed = FALSE,
-                         closable = FALSE,maximizable = FALSE, label = NULL,
-                         gradient = FALSE,elevation = 4,boxToolSize = "sm",
-                         headerBorder = TRUE,dropdownMenu = NULL,
-                         sidebar = NULL,id = "quarter.selector",
-                         selectInput(inputId = "quarter",
-                                     label = h6("Select Month"), 
-                                     choices =c(1,2,3,4 ), selected = 1,
-                                     width="200px")),       
-                 
+                
                  bs4Card(title = "Year", footer = NULL,
                          status = "maroon", solidHeader = T,width = 4,
                          background = NULL,height = NULL,icon = NULL,
@@ -444,42 +433,118 @@ ui <- dashboardPage(
                          gradient = FALSE,elevation = 4,boxToolSize = "sm",
                          headerBorder = TRUE,dropdownMenu = NULL,
                          sidebar = NULL,id = "year.selector",
-                         selectInput(inputId = "year",
+                         selectInput(inputId = "year.ytd",
                                      label = h6("Select Year"), 
                                      choices = c(2021,2022,2023,2024,2025), 
                                      selected = 2021 ,width = "200px"))
+               ), 
+               
+               fluidRow(
                  
-               )  
+                 infoBoxOutput("ytd.revenue", width = 4),
+                 infoBoxOutput("ytd.cost.of.sale", width = 4),
+                 infoBoxOutput("ytd.gross.profit", width = 4)
+                 
+               ), 
                
+               fluidRow(
+                 infoBoxOutput("ytd.gross.profit.percent", width = 4),
+                 infoBoxOutput("ytd.expense", width = 4),
+                 infoBoxOutput("ytd.net.profit", width = 4)
+                 
+               ),
                
+               fluidRow(
+                 infoBoxOutput("ytd.net.profit.percent", width = 4),           
+                 infoBoxOutput("ytd.items.sold", width = 4),
+                 infoBoxOutput("ytd.visitors", width = 4)            
+               ),
                
+               fluidRow(
+                 infoBoxOutput("ytd.inventory.closing.bal", width = 4),
+                 infoBoxOutput("ytd.bankrec", width = 4), 
+                 infoBoxOutput("ytd.items.transac", width = 4)
+               ),
                
+               fluidRow(
+                 bs4Card(title = "Monthly visitors ytd", footer = NULL,
+                         status = "warning", solidHeader = T,width = 12,
+                         background = NULL,height = NULL,icon = NULL,
+                         collapsible = TRUE,collapsed = FALSE,
+                         closable = FALSE,maximizable = FALSE, label = NULL,
+                         gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                         headerBorder = TRUE,dropdownMenu = NULL,
+                         sidebar = NULL,id = "YTD.transac",
+                         plotOutput("ytd.total.visitors.month")
+                 )),
+               
+               fluidRow(  
+                 
+                 tabBox(
+                   id = "ytd.rev.data",
+                   collapsible = F,
+                   elevation = 4,
+                   title = "Revenue",
+                   selected = "Product category",
+                   status = "info",
+                   solidHeader = T,
+                   type = "tabs",
+                   side = "right",
+                   tabPanel(
+                     title = "Product category",
+                     tableOutput("ytd.revenue.prod.cate")
+                     
+                   ),
+                   tabPanel(
+                     title = "Product sub-category",
+                     DTOutput("ytd.revenue.prod.subcate")
+                     
+                   ),
+                   tabPanel(
+                     title = "Product",
+                     DTOutput("ytd.revenue.product")
+                     
+                   )
+                 ),
+                 
+                 tabBox(
+                   id = "ytd.items.data",
+                   title = "Items sold",
+                   side ="right",
+                   collapsible = F,
+                   elevation = 4,
+                   selected = "Product category",
+                   status = "info",
+                   solidHeader = T,
+                   type = "tabs",
+                   tabPanel(
+                     title = "Product category",
+                     tableOutput("ytd.sales.prod.cate")
+                     
+                   ),
+                   tabPanel(
+                     title = "Product sub-category",
+                     DTOutput("ytd.sales.prod.subcate")
+                     
+                   ),
+                   tabPanel(
+                     title = "Product",
+                     DTOutput("ytd.sales.product")
+                     
+                   )
+                   
+                 )
+                 )
+               
+              
+                 
                )
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
        
           )
         )
-      ) 
-      
-      
+       
+      )
+ 
       
 
  
@@ -563,7 +628,7 @@ server <- function(input, output) {
   # opening inventory balance
   monthly.open.bal <- function(x){
     open.bal <- mibd %>% filter(month == x) 
-    open.bal[,2] }
+    open.bal[,3] }
   
   # inventory purchases
   monthly.inventory.purchase <- function(x){
@@ -711,7 +776,7 @@ server <- function(input, output) {
   })
   
   output$monthly.inventory.closing.bal <- renderInfoBox({
-    infoBox("Inventory", monthly.closing.balance(input$month),
+    infoBox("Closing Inventory", monthly.closing.balance(input$month),
             icon=icon("money-bill"),
             color = "success")
   })
@@ -825,7 +890,7 @@ server <- function(input, output) {
   
   # opening inventory balance
   qly.open.bal <- function(x){
-    open.balance <- mibd[1,2]
+    open.balance <- mibd[1,3]
     open.balance}
   
   # inventory purchases
@@ -953,7 +1018,7 @@ server <- function(input, output) {
             color = "success")})
   
   output$quarterly.inventory.closing.bal <- renderInfoBox({
-    infoBox("Inventory", qly.closing.balance(input$quarter),
+    infoBox("Closing Inventory", qly.closing.balance(input$quarter),
             icon=icon("money-bill"),
             color = "success")})
   
@@ -995,8 +1060,260 @@ server <- function(input, output) {
     infoBox("Gross profit", qly.gross.prof(input$quarter), 
             icon=icon("money-bill"),
             color = "success")})
-  
 
+  
+  #YTD
+  
+  #CALCULATIONS
+  
+  ytd.rev <- function(x){
+    total.ytd.rev<-  msd1 %>% filter(year == x)  %>% 
+      summarise(total_sales=sum(total_sale_price))
+    total.ytd.rev }
+  
+  # cost of sale
+  ytd.cost.of.sale <- function(x){
+    total.cost.of.sale <- msd1 %>% filter( year == x) %>%
+      summarise(cost_of_sale = sum(total_cost_price))
+    total.cost.of.sale  }
+  
+  #gross profit
+  ytd.gross.prof <- function(x){
+    total.gross.prof <- ytd.rev(x) - ytd.cost.of.sale(x) 
+    round(total.gross.prof,2) }
+  
+  #NET PROFIT
+  ytd.net.prof <- function(x){
+    total.net.profit <- (ytd.rev(x) - (ytd.cost.of.sale(x) + ytd.expense(x)))
+    round(total.net.profit,2) }
+  
+  # expense
+  ytd.expense <- function(x){
+    total.expense <- med %>% filter( year == x) %>%
+      summarise( expense= sum(amount))
+    total.expense  }
+  
+  # gross profit percent
+  ytd.avg.gross.profit.percent<- function(x){
+    ytd.gross.profit.margin <-  (ytd.rev(x) - ytd.cost.of.sale(x)) / ytd.rev(x)
+    ytd.gross.profit.margin <- round(ytd.gross.profit.margin,2) * 100  }
+      
+  
+  # item sales
+  ytd.item.sales <- function(x){
+    total.sales.ytd <-  msd1 %>% filter(year == x)  %>% 
+      summarise(total_sales=sum(qty))
+    total.sales.ytd  }
+  
+  # transactions
+  ytd.transactions <- function(x){
+    ytd.unique.visitors <- mtd1 %>% filter (year == x) %>%
+      summarise(year.visitors = n_distinct(transactions)) 
+    ytd.unique.visitors <- as_tibble(ytd.unique.visitors)
+    ytd.unique.visitors   }  
+  
+  # net profit percent  
+  ytd.net.prof.percent <- function(x){
+    total.net.profit.percent <- round( ((ytd.rev(x) - (ytd.cost.of.sale(x)
+                                                       + ytd.expense(x)))
+                                        /ytd.rev(x)) * 100, 2)
+    total.net.profit.percent}
+  
+  # items per transaction
+  ytd.items.transaction <- function(x){
+    total.items.transaction <- ytd.item.sales(x) /  ytd.transactions(x)
+    total.items.transaction
+  } 
+  
+  
+  
+  # opening inventory balance
+  ytd.open.bal <- function(x){
+    open.bal.td <- mibd[1,3] 
+    open.bal.td }
+  
+  # inventory purchases
+  ytd.inventory.purchase <- function(x){
+    total.inventory.purchase <- ipa %>% filter(year == x) %>%
+      summarise(total = sum(amount))
+    total.inventory.purchase }
+  
+  #bank rec
+  ytd.bank.reconiliation <- function(x){
+    total.bank <- ytd.rev(x) - (ytd.expense(x)+ ytd.inventory.purchase(x))
+    round(total.bank,2) }
+  
+  #inventory closing balance
+  ytd.closing.balance <- function(x){
+    ytd.open.bal(x) + ytd.inventory.purchase(x) - ytd.cost.of.sale(x)}
+  
+  #monthly  transactions YTD
+  ytd.transactions.month <- function(x){
+    ytd.visitors <- mtd1 %>% filter (year == x) %>%
+      group_by(month) %>%
+      count(month)
+    ytd.visitors <- ytd.visitors[order(-ytd.visitors$n),]
+    ytd.visitors %>% mutate(month=fct_reorder(month, -n)) %>%
+      ggplot +
+      geom_col(mapping = aes(month,n)) }
+  
+  
+  #drill down
+  #----------------------------------------------------------
+  #        B. YTD sales  by product category
+  #------------------------------------------------------      
+  ytd.sales.prod.cat <- function(x){(
+    ytd.prod.sales.cat<- msd1 %>% filter(year ==x) %>%
+      group_by(prod_cat) %>% 
+      summarise(total_sales = sum(qty))
+  )
+    ytd.prod.sales.cat <- ytd.prod.sales.cat[order(
+      -ytd.prod.sales.cat$total_sales),]
+    ytd.prod.sales.cat }
+  
+  #--------------------------------------------------------------  
+  #       C. YTD sales  by product sub_category     
+  #---------------------------------------------------------           
+  ytd.sales.sub.cat <- function(x){(
+    ytd.prod.sales.sub.cat <- msd1 %>% filter(year ==x) %>%
+      group_by(sub_cat) %>%
+      summarise(total_sales = sum(qty))
+  )
+    ytd.prod.sales.sub.cat <-  ytd.prod.sales.sub.cat[order(
+      - ytd.prod.sales.sub.cat$total_sales),]
+    ytd.prod.sales.sub.cat }
+  
+  #-----------------------------------------------------------------
+  #       D. YTD sales by product     
+  #----------------------------------------------------------------          
+  ytd.sales.prod <- function(x){(
+    ytd.prod.sales <- msd1 %>% filter(year ==x) %>%
+      group_by(product,sub_cat) %>% 
+      summarise(total_sales = sum(qty)) 
+  )
+    ytd.prod.sales <- ytd.prod.sales[order(-ytd.prod.sales$total_sales),]
+    ytd.prod.sales  }
+  
+  #----------------------------------------------------------
+  #    B. YTD REV by product category
+  #--------------------------------------------------------------
+  ytd.rev.prod.cat <-function(x){(
+    
+    ytd.prod.rev.cat <-  msd1 %>% filter(year ==x) %>%
+      group_by(prod_cat) %>%
+      summarise(total_sales = sum(total_sale_price))
+  )
+    ytd.prod.rev.cat
+    
+  }
+  
+  #------------------------------------------------------------
+  #    C. YTD REV by product sub_cat        
+  #----------------------------------------------------------- 
+  ytd.rev.sub.cat <- function(x){(
+    
+    ytd.prod.rev.sub.cat <-  msd1 %>% filter(year ==x) %>%
+      group_by(sub_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    ytd.prod.rev.sub.cat <- ytd.prod.rev.sub.cat[order(
+      -ytd.prod.rev.sub.cat$total_sales),]
+    ytd.prod.rev.sub.cat
+  }             
+  
+  #--------------------------------------------------------------
+  #    D. YTD REV by product     
+  #-------------------------------------------------------------- 
+  ytd.rev.prod <- function(x){(
+    ytd.prod.rev <-  msd1  %>% filter(year ==x) %>%
+      group_by(product,sub_cat)%>%
+      summarise(total_sales=sum(total_sale_price))
+  )
+    ytd.prod.rev <-  ytd.prod.rev[order(- ytd.prod.rev$total_sales),]
+    ytd.prod.rev
+  }  
+  
+  #OUTPUT
+  output$ytd.revenue <- renderInfoBox({
+    infoBox("Revenue",ytd.rev(input$year.ytd), 
+            icon = icon("credit-card"), color ="success")})
+  
+  output$ytd.cost.of.sale <- renderInfoBox({
+    infoBox("Cost of goods sold",ytd.cost.of.sale(input$year.ytd), 
+            icon = icon("money-bill"), color = "success")})
+  
+  output$ytd.gross.profit <- renderInfoBox({
+    infoBox("Gross profit", ytd.gross.prof(input$year.ytd), 
+            icon=icon("money-bill"),
+            color = "success")})
+  
+  output$ytd.net.profit <- renderInfoBox({
+    infoBox("Net profit", ytd.net.prof(input$year.ytd), 
+            icon=icon("money-bill"),color = "success")})
+  
+  output$ytd.expense <- renderInfoBox({
+    infoBox("Expense",ytd.expense(input$year.ytd), icon = icon("money-bill"), 
+            color = "success")}) 
+  
+  output$ytd.gross.profit.percent <- renderInfoBox({
+    infoBox("Gross profit %",ytd.avg.gross.profit.percent(input$year.ytd), 
+            icon = icon("money-bill"), color = "success")})
+  
+  output$ytd.items.sold <- renderInfoBox({
+    infoBox("Items sold",ytd.item.sales(input$year.ytd), 
+            icon = icon("money-bill"), color = "success")})
+  
+  output$ytd.net.profit.percent <- renderInfoBox({
+    infoBox("Net profit %", ytd.net.prof.percent(input$year.ytd), 
+            icon=icon("money-bill"),color = "success")})
+  
+  output$ytd.visitors <- renderInfoBox({
+    infoBox("Transactions",ytd.transactions(input$year.ytd), 
+            icon= icon("list"),color = "success")})
+  
+  output$ytd.items.transac <- renderInfoBox({
+    infoBox("Items per transaction", ytd.items.transaction(input$year.ytd), 
+            icon=icon("money-bill"),
+            color = "success")})
+  
+  
+  output$ytd.bankrec <- renderInfoBox({
+    infoBox("Bank", ytd.bank.reconiliation(input$year.ytd), 
+            icon=icon("money-bill"),
+            color = "success")})
+  
+  output$ytd.inventory.closing.bal <- renderInfoBox({
+    infoBox("Inventory", ytd.closing.balance(input$year.ytd),
+            icon=icon("money-bill"),
+            color = "success")})
+  
+  output$ytd.revenue.prod.cate <- renderTable({
+    ytd.rev.prod.cat(input$year.ytd) },colnames= FALSE )
+  
+  output$ytd.revenue.prod.subcate <- renderDT((
+    ytd.rev.sub.cat(input$year.ytd)), options = list(pageLength = 8),
+    colnames = c("Sub-Category","Total Sales"))  
+  
+  output$ytd.revenue.product <- renderDT((
+    ytd.rev.prod(input$year.ytd)), options = list(pageLength = 8),
+    colnames = c("Product","Sub-Category","Total Sales"))
+  
+  #monthly item sales drill-down
+  output$ytd.sales.prod.cate <- renderTable((
+    ytd.sales.prod.cat(input$year.ytd)), colnames= FALSE)
+  
+  output$ytd.sales.prod.subcate <- renderDT((
+    ytd.sales.sub.cat(input$year.ytd)), options = list(pageLength = 8),
+    colnames = c("Sub-Category","Total Sales"))
+  
+  output$ytd.sales.product <- renderDT((
+    ytd.sales.prod(input$year.ytd)), options = list(pageLength = 8),
+    colnames = c("Product","Sub-Category","Total Sales"))
+  
+  output$ytd.total.visitors.month <- renderPlot({
+    ytd.transactions.month(input$year.ytd) })
+  
+  
   }
   
 
