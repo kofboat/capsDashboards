@@ -130,10 +130,10 @@ ui <- dashboardPage(
                fluidRow(
                  valueBox("MONTHLY DATA OVERVIEW", "",
                           icon = icon("binoculars") , 
-                          color = "success", width = 4),
+                          color = "maroon", width = 4, elevation = 4),
                  
                  bs4Card(title = "Month", footer = NULL,
-                         status = "success", solidHeader = T,width = 4,
+                         status = "maroon", solidHeader = T,width = 4,
                          background = NULL,height = NULL,icon = NULL,
                          collapsible = TRUE,collapsed = FALSE,
                          closable = FALSE,maximizable = FALSE, label = NULL,
@@ -148,10 +148,10 @@ ui <- dashboardPage(
                                                  "MAY_22","JUN_22",
                                                  "JUL_22","AUG_22",
                                                  "SEP_22","OCT_22"), 
-                                     selected = "NOV_21",width = "300px")) ,
+                                     selected = "NOV_21",width = "200px")) ,
                  
                  bs4Card(title = "Year", footer = NULL,
-                         status = "success", solidHeader = T,width = 4,
+                         status = "maroon", solidHeader = T,width = 4,
                          background = NULL,height = NULL,icon = NULL,
                          collapsible = TRUE,collapsed = FALSE,
                          closable = FALSE,maximizable = FALSE, label = NULL,
@@ -161,7 +161,7 @@ ui <- dashboardPage(
                          selectInput(inputId = "year",
                                      label = h6("Select Year"), 
                                      choices = c(2021,2022,2023,2024,2025), 
-                                     selected = 2021 ,width = "300px"))
+                                     selected = 2021 ,width = "200px"))
                  
                ),
                
@@ -200,9 +200,9 @@ ui <- dashboardPage(
                
                fluidRow(
                  
-                 bs4Card(title = "Daily visitors",
+                 bs4Card(title = "Daily visitors per month",
                          footer = NULL,
-                         status = "success",
+                         status = "warning",
                          solidHeader = T,
                          background = NULL,
                          width = 12,
@@ -219,7 +219,7 @@ ui <- dashboardPage(
                          label = NULL,
                          dropdownMenu = NULL,
                          sidebar = NULL,
-                         id = "plot.visitore",
+                         id = "plot.daily.visitors",
                          
                          plotOutput("daily.visitors")
                  )
@@ -229,11 +229,12 @@ ui <- dashboardPage(
                  tabBox(
                    id = "monthly.rev.data",
                    collapsible = T,
-                   elevation = 2,
+                   elevation = 4,
                    title = "Revenue",
                    selected = "category",
-                   status = "primary",
-                   solidHeader = FALSE,
+                   status = "info",
+                   side ="right", 
+                   solidHeader = T,
                    type = "tabs",
                    tabPanel(
                      title = "Product category",
@@ -254,15 +255,17 @@ ui <- dashboardPage(
                  ),
                  tabBox(
                    id = "monthly.items.data",
-                   title = "items sold",
-                   selected = "Tab 2",
-                   status = "primary",
-                   solidHeader = FALSE,
+                   title = "Items sold",
+                   side = "right",
+                   selected = "Product category",
+                   status = "info",
+                   solidHeader = T,
+                   
                    type = "tabs",
+                   
                    tabPanel(
                      title = "Product category",
                      tableOutput("monthly.sales.prod.cate")
-                     
                    ),
                    tabPanel(
                      title = "Product sub-category",
@@ -278,14 +281,25 @@ ui <- dashboardPage(
        tabItem(tabName = "quarter", 
            
                fluidRow(
-            box(title = "Quarterly Drill-down", width = 4 ,status = "success" , 
-                     solidHeader = T, height = "100",
-                     selectInput(inputId = "quarter",
-                                 label = h6("Select Quarter"), 
-                                 choices = c(1,2,3,4), 
-                                 selected =1,width = "300px")),
+                 valueBox("QUARTERLY DATA OVERVIEW", "",
+                          icon = icon("binoculars"), color = "maroon", 
+                          width = 4, elevation = 4),
+                       
+                  bs4Card(title = "Quarter", footer = NULL,
+                          status = "maroon", solidHeader = T,width = 4,
+                          background = NULL,height = NULL,icon = NULL,
+                          collapsible = TRUE,collapsed = FALSE,
+                          closable = FALSE,maximizable = FALSE, label = NULL,
+                          gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                          headerBorder = TRUE,dropdownMenu = NULL,
+                          sidebar = NULL,id = "quarter.selector",
+                          selectInput(inputId = "quarter",
+                                      label = h6("Select Month"), 
+                                      choices =c(1,2,3,4 ), selected = 1,
+                                      width="200px")),       
+           
                  bs4Card(title = "Year", footer = NULL,
-                         status = "success", solidHeader = T,width = 4,
+                         status = "maroon", solidHeader = T,width = 4,
                          background = NULL,height = NULL,icon = NULL,
                          collapsible = TRUE,collapsed = FALSE,
                          closable = FALSE,maximizable = FALSE, label = NULL,
@@ -295,7 +309,7 @@ ui <- dashboardPage(
                          selectInput(inputId = "year",
                                      label = h6("Select Year"), 
                                      choices = c(2021,2022,2023,2024,2025), 
-                                     selected = 2021 ,width = "300px"))
+                                     selected = 2021 ,width = "200px"))
                  
                ),
                
@@ -328,7 +342,7 @@ ui <- dashboardPage(
             
           fluidRow(
             bs4Card(title = "Monthly visitors per quarter", footer = NULL,
-                    status = "success", solidHeader = T,width = 12,
+                    status = "warning", solidHeader = T,width = 12,
                     background = NULL,height = NULL,icon = NULL,
                     collapsible = TRUE,collapsed = FALSE,
                     closable = FALSE,maximizable = FALSE, label = NULL,
@@ -347,7 +361,7 @@ ui <- dashboardPage(
                     collapsible = F,
                     elevation = 4,
                     title = "Revenue",
-                    selected = "Tab 1",
+                    selected = "Product category",
                     status = "info",
                     solidHeader = T,
                     type = "tabs",
@@ -374,11 +388,12 @@ ui <- dashboardPage(
                tabBox(
                     id = "quarterly.items.data",
                     title = "Items sold",
+                    side ="right",
                     collapsible = F,
                     elevation = 4,
-                    selected = "Product",
+                    selected = "Product category",
                     status = "info",
-                    solidHeader = FALSE,
+                    solidHeader = T,
                     type = "tabs",
                     tabPanel(
                       title = "Product category",
@@ -397,16 +412,76 @@ ui <- dashboardPage(
                       
                     )
                   )	
-                    
-           
-          ),
+                  
+          )),
        
        
-       tabItem(tabName = "YTD","ytd adat")
+       tabItem(tabName = "YTD","ytd adat", 
+               
+               fluidRow(
+                 valueBox("YEAR-TO-DATE DATA OVERVIEW", "",
+                          icon = icon("binoculars"), color = "maroon", 
+                          width = 4, elevation = 4),
+                 
+                 bs4Card(title = "Quarter", footer = NULL,
+                         status = "maroon", solidHeader = T,width = 4,
+                         background = NULL,height = NULL,icon = NULL,
+                         collapsible = TRUE,collapsed = FALSE,
+                         closable = FALSE,maximizable = FALSE, label = NULL,
+                         gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                         headerBorder = TRUE,dropdownMenu = NULL,
+                         sidebar = NULL,id = "quarter.selector",
+                         selectInput(inputId = "quarter",
+                                     label = h6("Select Month"), 
+                                     choices =c(1,2,3,4 ), selected = 1,
+                                     width="200px")),       
+                 
+                 bs4Card(title = "Year", footer = NULL,
+                         status = "maroon", solidHeader = T,width = 4,
+                         background = NULL,height = NULL,icon = NULL,
+                         collapsible = TRUE,collapsed = FALSE,
+                         closable = FALSE,maximizable = FALSE, label = NULL,
+                         gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                         headerBorder = TRUE,dropdownMenu = NULL,
+                         sidebar = NULL,id = "year.selector",
+                         selectInput(inputId = "year",
+                                     label = h6("Select Year"), 
+                                     choices = c(2021,2022,2023,2024,2025), 
+                                     selected = 2021 ,width = "200px"))
+                 
+               )  
+               
+               
+               
+               
+               )
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+          )
         )
-      )
       ) 
-)             
+      
+      
+      
+
  
                                  
 server <- function(input, output) {
