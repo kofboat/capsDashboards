@@ -132,18 +132,25 @@ ui <- dashboardPage(
                           icon = icon("binoculars") , 
                           color = "success", width = 4),
                  
-                 box(title = "Month", width = 4 ,status = "success" , 
-                     solidHeader = T, height = "100",
-                     selectInput(inputId = "month",
-                                 label = h6("Select Month"), 
-                                 choices = c("NOV_21","DEC_21",
-                                             "JAN_22","FEB_22",
-                                             "MAR_22","APR_22",
-                                             "MAY_22","JUN_22",
-                                             "JUL_22","AUG_22",
-                                             "SEP_22","OCT_22"), 
-                                 selected = "NOV_21",width = "300px")),
-                 bs4Card(title = "Daily visitors", footer = NULL,
+                 bs4Card(title = "Month", footer = NULL,
+                         status = "success", solidHeader = T,width = 4,
+                         background = NULL,height = NULL,icon = NULL,
+                         collapsible = TRUE,collapsed = FALSE,
+                         closable = FALSE,maximizable = FALSE, label = NULL,
+                         gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                         headerBorder = TRUE,dropdownMenu = NULL,
+                         sidebar = NULL,id = "month.selector",
+                         selectInput(inputId = "month",
+                                     label = h6("Select Month"), 
+                                     choices = c("NOV_21","DEC_21",
+                                                 "JAN_22","FEB_22",
+                                                 "MAR_22","APR_22",
+                                                 "MAY_22","JUN_22",
+                                                 "JUL_22","AUG_22",
+                                                 "SEP_22","OCT_22"), 
+                                     selected = "NOV_21",width = "300px")) ,
+                 
+                 bs4Card(title = "Year", footer = NULL,
                          status = "success", solidHeader = T,width = 4,
                          background = NULL,height = NULL,icon = NULL,
                          collapsible = TRUE,collapsed = FALSE,
@@ -333,58 +340,65 @@ ui <- dashboardPage(
             
           ),
            
-        fluidRow(          
-            tabBox(
-              id = "quarterly.rev.data",
-              collapsible = T,
-              elevation = 2,
-              title = "Revenue",
-              selected = "category",
-              status = "primary",
-              solidHeader = FALSE,
-              type = "tabs",
-              tabPanel(
-                title = "Product category",
-                tableOutput("quarterly.revenue.prod.cate")
-                
-              ),
-              tabPanel(
-                title = "Product sub-category",
-                DTOutput("quarterly.revenue.prod.subcate")
-                
-              ),
-              tabPanel(
-                title = "Product",
-                DTOutput("quarterly.revenue.product")
-                
-              )
-              
-            ),
-            
-            tabBox(
-              id = "quarterly.items.data",
-              title = "items sold",
-              selected = "Tab 2",
-              status = "primary",
-              solidHeader = FALSE,
-              type = "tabs",
-              tabPanel(
-                title = "Product category",
-                tableOutput("quarterly.sales.prod.cate")
-                
-              ),
-              tabPanel(
-                title = "Product sub-category",
-                DTOutput("quarterly.sales.prod.subcate")
-                
-              ),
-              tabPanel(
-                title = "Product",
-                DTOutput("quarterly.sales.product")
-                
-                
-               )
-              )
+        fluidRow(  
+                  
+                  tabBox(
+                    id = "quarterly.rev.data",
+                    collapsible = F,
+                    elevation = 4,
+                    title = "Revenue",
+                    selected = "Tab 1",
+                    status = "info",
+                    solidHeader = T,
+                    type = "tabs",
+                    side = "right",
+                    tabPanel(
+                      title = "Product category",
+                      tableOutput("quarterly.revenue.prod.cate")
+                      
+                    ),
+                    tabPanel(
+                      title = "Product sub-category",
+                      DTOutput("quarterly.revenue.prod.subcate")
+                      
+                    ),
+                    tabPanel(
+                      title = "Product",
+                      DTOutput("quarterly.revenue.product")
+                      
+                    )
+                  )
+                    
+                  ,
+          
+               tabBox(
+                    id = "quarterly.items.data",
+                    title = "Items sold",
+                    collapsible = F,
+                    elevation = 4,
+                    selected = "Product",
+                    status = "info",
+                    solidHeader = FALSE,
+                    type = "tabs",
+                    tabPanel(
+                      title = "Product category",
+                      tableOutput("quarterly.sales.prod.cate")
+                      
+                    ),
+                    tabPanel(
+                      title = "Product sub-category",
+                      DTOutput("quarterly.sales.prod.subcate")
+                      
+                    ),
+                    tabPanel(
+                      title = "Product",
+                      DTOutput("quarterly.sales.product")
+                      
+                      
+                    )
+                  )	
+                    
+           
           ),
        
        
