@@ -124,7 +124,11 @@ ui <- dashboardPage(
       dashboardBody(
         tabItems(
        
-       tabItem(tabName = "home", "home data"),
+       tabItem(tabName = "home", 
+               
+ 
+         
+       ),
        
        tabItem(tabName = "monthly", 
                fluidRow(
@@ -713,9 +717,9 @@ server <- function(input, output) {
       count(Date) 
     (visitors <- visitors[order(-visitors$n),])
     
-    visitors %>% mutate(Date=fct_reorder(Date, -n)) %>%
+    visitors %>% mutate(Date=fct_reorder(Date, -n), visitors = n) %>%
       ggplot +
-      geom_col(mapping = aes(Date,n)) }
+      geom_col(mapping = aes(Date,visitors)) }
   
   #monthly
   output$monthly.visitors <- renderInfoBox({
@@ -876,9 +880,9 @@ server <- function(input, output) {
       group_by(month) %>%
       count(month)
     quarter.visitors <- quarter.visitors[order(-quarter.visitors$n),]
-    quarter.visitors %>% mutate(month=fct_reorder(month, -n)) %>%
+    quarter.visitors %>% mutate(month=fct_reorder(month, -n), visitors=n) %>%
       ggplot +
-      geom_col(mapping = aes(month,n)) }
+      geom_col(mapping = aes(month,visitors)) }
   
   # items per transaction
   qly.items.transaction <- function(x){
@@ -1121,7 +1125,7 @@ server <- function(input, output) {
   
   # items per transaction
   ytd.items.transaction <- function(x){
-    total.items.transaction <- ytd.item.sales(x) /  ytd.transactions(x)
+    total.items.transaction <- round(ytd.item.sales(x) /  ytd.transactions(x),2) 
     total.items.transaction
   } 
   
@@ -1153,9 +1157,9 @@ server <- function(input, output) {
       group_by(month) %>%
       count(month)
     ytd.visitors <- ytd.visitors[order(-ytd.visitors$n),]
-    ytd.visitors %>% mutate(month=fct_reorder(month, -n)) %>%
+    ytd.visitors %>% mutate(month=fct_reorder(month, -n), visitors = n) %>%
       ggplot +
-      geom_col(mapping = aes(month,n)) }
+      geom_col(mapping = aes(month,visitors)) }
   
   
   #drill down
