@@ -8,15 +8,51 @@ library(DT)
 #----------------------------------------------------------
 #     IMPORT DATA
 #----------------------------------------------------------
-
+all.tasks <- read_csv("tasks.home.csv")
+all.anouncements <- read_csv("announce.csv")
 msd  <- read_csv("master.data.csv")
 med  <- read_csv("expense.account.csv")
-mtd  <- read_csv("Traffic.csv") 
+mtd  <- read_csv("traffic.csv") 
 mibd   <- read_csv("inventory.opening.balance.csv") 
 ipa    <- read_csv("inventory.purchase.account.csv")
 #-----------------------------------------------------------
 #     DATA CLEANING AND PREPARATION
 #------------------------------------------------------------
+all.anouncements <- all.anouncements %>% 
+  mutate(month =
+           case_when(str_sub(date,1,1) == 1 ~ 'JAN_22', 
+                     str_sub(date,1,1) == 2 ~ 'FEB_22',
+                     str_sub(date,1,1) == 3 ~ 'MAR_22', 
+                     str_sub(date,1,1) == 4 ~ 'APR_22',
+                     str_sub(date,1,1) == 5 ~ 'MAY_22', 
+                     str_sub(date,1,1) == 6 ~ 'JUN_22',
+                     str_sub(date,1,1) == 7 ~ 'JUL_22', 
+                     str_sub(date,1,1) == 8 ~ 'AUG_22',
+                     str_sub(date,1,1) == 9 ~ 'SEP_22', 
+                     str_sub(date,1,1) == 10 ~'OCT_22',
+                     str_sub(date,1,1) == 11 ~ 'NOV_21', 
+                     str_sub(date,1,1) == 12 ~ 'DEC_21')
+  )
+
+all.anouncements
+
+all.tasks<- all.tasks %>% 
+  mutate(month =
+           case_when(str_sub(date,1,1) == 1 ~ 'JAN_22', 
+                     str_sub(date,1,1) == 2 ~ 'FEB_22',
+                     str_sub(date,1,1) == 3 ~ 'MAR_22', 
+                     str_sub(date,1,1) == 4 ~ 'APR_22',
+                     str_sub(date,1,1) == 5 ~ 'MAY_22', 
+                     str_sub(date,1,1) == 6 ~ 'JUN_22',
+                     str_sub(date,1,1) == 7 ~ 'JUL_22', 
+                     str_sub(date,1,1) == 8 ~ 'AUG_22',
+                     str_sub(date,1,1) == 9 ~ 'SEP_22', 
+                     str_sub(date,1,1) == 10 ~'OCT_22',
+                     str_sub(date,1,1) == 11 ~ 'NOV_21', 
+                     str_sub(date,1,1) == 12 ~ 'DEC_21')
+  )
+
+all.tasks
 
 #msd <- msd %>%
   #select(!c(12:19))  # delete empty columns
@@ -100,6 +136,8 @@ mtd1
 ui <- dashboardPage(
   
       dashboardHeader(title = "CAPS PHARMACY"),
+      
+     
       
       dashboardSidebar(
         
@@ -212,75 +250,60 @@ ui <- dashboardPage(
        
        fluidRow(
          
-         bs4Card(title=NULL,footer="ANNOUNCEMENTS",status = "maroon",solidHeader = T,
+         bs4Card(title=NULL,footer="announceMENTS",status = "maroon",solidHeader = T,
                  background = NULL,height = NULL,icon = NULL,
                  collapsible = TRUE,collapsed = FALSE,
                  closable = FALSE,maximizable = FALSE, label = NULL,
                  gradient = FALSE,elevation = 4,boxToolSize = "sm",
                  headerBorder = TRUE,dropdownMenu = NULL,
-                 sidebar = NULL, width = 6,
-                 
-                 bs4Carousel(
-                   id="design.images",
-                   
-                   bs4CarouselItem(caption = "Design 1", img(src="images.1.jpg")),
-                   
-                   bs4CarouselItem(caption = "Design 2" , img(src="images.2.jpg")),
-                   
-                   bs4CarouselItem(caption = "Design 3", img(src="images.3.jpg")),
-                   
-                   bs4CarouselItem(caption = "Design 4", img(src="images.4.jpg")),
-                   
-                   bs4CarouselItem(caption = "Design 5", img(src="images.5.jpg")),
-                   
-                   bs4CarouselItem(caption = "Design 6", img(src="images.6.jpg"))
-                 )
+                 sidebar = NULL, width = 4,
+                 selectInput(inputId = "month.home",
+                             label = h6("Select Month"), 
+                             choices = c("NOV_21","DEC_21",
+                                         "JAN_22","FEB_22",
+                                         "MAR_22","APR_22",
+                                         "MAY_22","JUN_22",
+                                         "JUL_22","AUG_22",
+                                         "SEP_22","OCT_22"), 
+                             selected = "NOV_21",width = "150px"),
+                 selectInput(inputId = "year.home",
+                             label = h6("Select Year"), 
+                             choices = c(2021,2022,2023,2024,2025), 
+                             selected = 2021 ,width = "150px")
                  
                  
                  
                  
          ),
          
-         bs4Card(title=NULL,footer="TASKS",status = "maroon",solidHeader = T,
-                 background = NULL,height = NULL,icon = NULL,
-                 collapsible = TRUE,collapsed = FALSE,
+         
+         bs4Card(title="announcements",footer="announceMENTS",
+                 background = NULL,height = NULL,icon = NULL,solidHeader = T,
+                 collapsible = TRUE,collapsed = FALSE,status = "maroon",
                  closable = FALSE,maximizable = FALSE, label = NULL,
                  gradient = FALSE,elevation = 4,boxToolSize = "sm",
                  headerBorder = TRUE,dropdownMenu = NULL,
-                 sidebar = NULL, width = 6,
+                 sidebar = NULL, width = 4,
+                 DTOutput("blast", width = "100%",height="auto")
                  
-                 bs4Carousel(
-                   id="product.images",
-                   
-                   bs4CarouselItem(caption = "product 1", img(src="images.1.jpg")),
-                   
-                   bs4CarouselItem(caption = "product 2" , img(src="images.2.jpg")),
-                   
-                   bs4CarouselItem(caption = "product 3", img(src="images.3.jpg")),
-                   
-                   bs4CarouselItem(caption = "product 4", img(src="images.4.jpg")),
-                   
-                   bs4CarouselItem(caption = "product 5", img(src="images.5.jpg")),
-                   
-                   bs4CarouselItem(caption = "product 6", img(src="images.6.jpg"))
-                 )
-                 
-                 
-                 
-                 
-         )        
+         ),
+         
+         bs4Card(title= "Marketing and Advertising",footer="TASKS",
+                 background = NULL,height = NULL,icon = NULL,status = "maroon",
+                 collapsible = TRUE,collapsed = FALSE,solidHeader = T,
+                 closable = FALSE,maximizable = FALSE, label = NULL,
+                 gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                 headerBorder = TRUE,dropdownMenu = NULL,
+                 sidebar = NULL, width = 4,
+                 DTOutput("pending.tasks", width = "100%",height="auto")
+                
+               )        
          
          
-       )
+            )
        
        
-       
-       
-       
-       
-       
-       
-       ),
+         ),
        
        tabItem(tabName = "monthly", 
                fluidRow(
@@ -698,6 +721,8 @@ ui <- dashboardPage(
        
           )
         )
+      
+      
        
       )
  
@@ -706,6 +731,40 @@ ui <- dashboardPage(
  
                                  
 server <- function(input, output) {
+  
+  #announcements
+ broadcast <- function(x){
+   
+   current.announce <- all.anouncements %>% filter (month ==x)  %>%
+     group_by(date)
+   current.announce[,2:3]
+ }
+  
+ output$blast <- renderDT(
+   broadcast(input$month.home), options = list(pageLength = 3),filter ="none",
+   colnames = c("Date","announcement"), rownames = F)
+ 
+ 
+ 
+  #Pending Tasks
+  
+  To.do <- function(x){
+   
+   current.tasks <- all.tasks %>% filter (month ==x)  %>%
+     group_by(date)
+   current.tasks[,2:3]
+ }
+ 
+ output$pending.tasks<- renderDT(
+   To.do(input$month.home), options = list(pageLength = 3),filter ="none",
+   colnames = c("Date","Tasks")) 
+  
+  
+  
+  
+  
+  
+  
   # Business logic - calculations
   
   #---------------month
