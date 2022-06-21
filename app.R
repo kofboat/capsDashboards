@@ -125,9 +125,161 @@ ui <- dashboardPage(
         tabItems(
        
        tabItem(tabName = "home", 
+            fluidRow(
+              
+              bs4Card(title=NULL,footer="DESIGN PROPOSALS",status = "maroon",solidHeader = T,
+                      background = NULL,height = NULL,icon = NULL,
+                      collapsible = TRUE,collapsed = FALSE,
+                      closable = FALSE,maximizable = FALSE, label = NULL,
+                      gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                      headerBorder = TRUE,dropdownMenu = NULL,
+                      sidebar = NULL, width = 6,
+                 
+                 bs4Carousel(
+                    id="design.images",
+                  
+                   bs4CarouselItem(caption = "Design 1", img(src="images.1.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 2" , img(src="images.2.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 3", img(src="images.3.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 4", img(src="images.4.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 5", img(src="images.8.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 6", img(src="images.9.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 7" , img(src="images.11.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 8", img(src="images.12.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 9", img(src="images.13.jpg"))
+                   
+                  
+               )
                
+               
+               
+               
+             ),
+          
+             bs4Card(title=NULL,footer="PRODUCT IMAGES",status = "maroon",solidHeader = T,
+                     background = NULL,height = NULL,icon = NULL,
+                     collapsible = TRUE,collapsed = FALSE,
+                     closable = FALSE,maximizable = FALSE, label = NULL,
+                     gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                     headerBorder = TRUE,dropdownMenu = NULL,
+                     sidebar = NULL, width = 6,
+                     
+                     bs4Carousel(
+                       id="product.images",
+                       
+                       bs4CarouselItem(caption = "prod 1", img(src="advil.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 2" , img(src="child.cough.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 3", img(src="condom.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 4", img(src="cough.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 5", img(src="ibu.gel.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 6", img(src="lidocaine.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 7", img(src="lidocaine.patch.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 8" , img(src="lotrisone.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 9", img(src="tampons.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 10", img(src="tylenol.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 11", img(src="vitamins.jpg")),
+                       
+                       bs4CarouselItem(caption = "prod 12", img(src="voltaren.jpg"))
+                     )
+                     
+                     
+                     
+                     
+             )        
  
          
+       ),
+       
+       
+       
+       fluidRow(
+         
+         bs4Card(title=NULL,footer="ANNOUNCEMENTS",status = "maroon",solidHeader = T,
+                 background = NULL,height = NULL,icon = NULL,
+                 collapsible = TRUE,collapsed = FALSE,
+                 closable = FALSE,maximizable = FALSE, label = NULL,
+                 gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                 headerBorder = TRUE,dropdownMenu = NULL,
+                 sidebar = NULL, width = 6,
+                 
+                 bs4Carousel(
+                   id="design.images",
+                   
+                   bs4CarouselItem(caption = "Design 1", img(src="images.1.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 2" , img(src="images.2.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 3", img(src="images.3.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 4", img(src="images.4.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 5", img(src="images.5.jpg")),
+                   
+                   bs4CarouselItem(caption = "Design 6", img(src="images.6.jpg"))
+                 )
+                 
+                 
+                 
+                 
+         ),
+         
+         bs4Card(title=NULL,footer="TASKS",status = "maroon",solidHeader = T,
+                 background = NULL,height = NULL,icon = NULL,
+                 collapsible = TRUE,collapsed = FALSE,
+                 closable = FALSE,maximizable = FALSE, label = NULL,
+                 gradient = FALSE,elevation = 4,boxToolSize = "sm",
+                 headerBorder = TRUE,dropdownMenu = NULL,
+                 sidebar = NULL, width = 6,
+                 
+                 bs4Carousel(
+                   id="product.images",
+                   
+                   bs4CarouselItem(caption = "product 1", img(src="images.1.jpg")),
+                   
+                   bs4CarouselItem(caption = "product 2" , img(src="images.2.jpg")),
+                   
+                   bs4CarouselItem(caption = "product 3", img(src="images.3.jpg")),
+                   
+                   bs4CarouselItem(caption = "product 4", img(src="images.4.jpg")),
+                   
+                   bs4CarouselItem(caption = "product 5", img(src="images.5.jpg")),
+                   
+                   bs4CarouselItem(caption = "product 6", img(src="images.6.jpg"))
+                 )
+                 
+                 
+                 
+                 
+         )        
+         
+         
+       )
+       
+       
+       
+       
+       
+       
+       
+       
        ),
        
        tabItem(tabName = "monthly", 
