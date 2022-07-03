@@ -8,13 +8,13 @@ library(DT)
 #----------------------------------------------------------
 #     IMPORT DATA
 #----------------------------------------------------------
-all.tasks <- read_csv("tasks.home.csv")
-all.anouncements <- read_csv("announce.csv")
-msd  <- read_csv("master.data.csv")
-med  <- read_csv("expense.account.csv")
-mtd  <- read_csv("traffic.csv") 
-mibd   <- read_csv("inventory.opening.balance.csv") 
-ipa    <- read_csv("inventory.purchase.account.csv")
+all.tasks <- read_csv("tasks.home.csv",show_col_types = F)
+all.anouncements <- read_csv("announce.csv",show_col_types = F)
+msd  <- read_csv("master.data.csv",show_col_types = F)
+med  <- read_csv("expense.account.csv",show_col_types = F)
+mtd  <- read_csv("traffic.csv",show_col_types = F) 
+mibd   <- read_csv("inventory.opening.balance.csv",show_col_types = F) 
+ipa    <- read_csv("inventory.purchase.account.csv",show_col_types = F)
 #-----------------------------------------------------------
 #     DATA CLEANING AND PREPARATION
 #------------------------------------------------------------
@@ -802,7 +802,9 @@ server <- function(input, output) {
   monthly.avg.gross.profit.percent<- function(x){
     gross.profit.margin <- msd1 %>% filter( month == x) %>%
       summarise(avg.gross.profit.margin = round(mean(gross_margin), 2))
-    gross.profit.margin  }
+    if(gross.profit.margin[[1]] =="NaN"){print("NA")} else
+    {gross.profit.margin[[1]]}  
+    }
   
   #gross profit
   monthly.gross.prof <- function(x){
@@ -822,20 +824,28 @@ server <- function(input, output) {
     net.profit.percent <- round( ((monthly.rev(x) - (monthly.cost.of.sale(x)
                                                      + monthly.expense(x)))
                                   /monthly.rev(x)) * 100, 2)
-    net.profit.percent
+    if(net.profit.percent[[1]] %in% c("NaN","Inf", "-Inf")   )
+      {print("NA")} else
+    {net.profit.percent[[1]]} 
   } 
   
   # net profit    
   monthly.net.prof <- function(x){
     
     net.profit <- (monthly.rev(x) - (monthly.cost.of.sale(x) + monthly.expense(x)))
-    round(net.profit,2)
+    net.profit <- round(net.profit,2)
+    if(net.profit[[1]] %in% c("NaN","Inf", "-Inf",0))
+    {print("NA")} else
+    {net.profit[[1]]} 
+    
   }
   
   # items per transaction
   monthly.items.transaction <- function(x){
     items.transaction <- monthly.item.sales(x) /  monthly.transactions(x)
-    items.transaction
+    if(items.transaction[[1]] %in% c("NaN","Inf", "-Inf"))
+    {print("NA")} else
+    {items.transaction[[1]]}   
   } 
   
   
@@ -858,7 +868,9 @@ server <- function(input, output) {
   
   #inventory closing balance
   monthly.closing.balance <- function(x){
-    monthly.open.bal(x) + monthly.inventory.purchase(x) - monthly.cost.of.sale(x)}
+    inventory.closing.month <- monthly.open.bal(x) + monthly.inventory.purchase(x) 
+   
+    }
   
   
   # Monthly drill-down 
@@ -925,12 +937,12 @@ server <- function(input, output) {
   # daily transactions
   daily.transactions <- function(x){
     visitors <- mtd1 %>% filter (month == x) %>%
-      count(Date) 
-    (visitors <- visitors[order(-visitors$n),])
-    
-    visitors %>% mutate(Date=fct_reorder(Date, -n), visitors = n) %>%
+     mutate(Date=fct_reorder(Date, transactions)) %>%
       ggplot +
-      geom_col(mapping = aes(Date,visitors)) }
+      geom_bar(mapping = aes(Date)) + 
+      ylab("unique visitors")
+    visitors
+    }
   
   #monthly
   output$monthly.visitors <- renderInfoBox({
