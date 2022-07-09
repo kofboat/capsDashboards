@@ -12,7 +12,7 @@ all.tasks <- read_csv("tasks.home.csv",show_col_types = F)
 all.anouncements <- read_csv("announce.csv",show_col_types = F)
 msd  <- read_csv("master.data.csv",show_col_types = F)
 med  <- read_csv("expense.account.csv",show_col_types = F)
-mtd  <- read_csv("traffic.csv",show_col_types = F) 
+mtd  <- read_csv("traffic1.csv",show_col_types = F) 
 mibd   <- read_csv("inventory.opening.balance.csv",show_col_types = F) 
 ipa    <- read_csv("inventory.purchase.account.csv",show_col_types = F)
 #-----------------------------------------------------------
@@ -29,9 +29,9 @@ all.anouncements <- all.anouncements %>%
                      str_sub(date,1,1) == 7 ~ 'JUL_22', 
                      str_sub(date,1,1) == 8 ~ 'AUG_22',
                      str_sub(date,1,1) == 9 ~ 'SEP_22', 
-                     str_sub(date,1,1) == 10 ~'OCT_22',
-                     str_sub(date,1,1) == 11 ~ 'NOV_21', 
-                     str_sub(date,1,1) == 12 ~ 'DEC_21')
+                     str_sub(date,1,2) == 10 ~'OCT_22',
+                     str_sub(date,1,2) == 11 ~ 'NOV_21', 
+                     str_sub(date,1,2) == 12 ~ 'DEC_21')
   )
 
 all.anouncements
@@ -47,9 +47,9 @@ all.tasks<- all.tasks %>%
                      str_sub(date,1,1) == 7 ~ 'JUL_22', 
                      str_sub(date,1,1) == 8 ~ 'AUG_22',
                      str_sub(date,1,1) == 9 ~ 'SEP_22', 
-                     str_sub(date,1,1) == 10 ~'OCT_22',
-                     str_sub(date,1,1) == 11 ~ 'NOV_21', 
-                     str_sub(date,1,1) == 12 ~ 'DEC_21')
+                     str_sub(date,1,2) == 10 ~'OCT_22',
+                     str_sub(date,1,2) == 11 ~ 'NOV_21', 
+                     str_sub(date,1,2) == 12 ~ 'DEC_21')
   )
 
 all.tasks
@@ -94,18 +94,18 @@ mibd <- mibd %>%
 mtd1 <- mtd %>%
   mutate(
     month =
-      case_when(str_sub(Date,1,1) == 1 ~ 'JAN_22', 
-                str_sub(Date,1,1) == 2 ~ 'FEB_22',
-                str_sub(Date,1,1) == 3 ~ 'MAR_22', 
-                str_sub(Date,1,1) == 4 ~ 'APR_22',
-                str_sub(Date,1,1) == 5 ~ 'MAY_22', 
-                str_sub(Date,1,1) == 6 ~ 'JUN_22',
-                str_sub(Date,1,1) == 7 ~ 'JUL_22', 
-                str_sub(Date,1,1) == 8 ~ 'AUG_22',
-                str_sub(Date,1,1) == 9 ~ 'SEP_22', 
-                str_sub(Date,1,1) == 10 ~'OCT_22',
-                str_sub(Date,1,1) == 11 ~ 'NOV_21', 
-                str_sub(Date,1,1) == 12 ~ 'DEC_21'
+      case_when(str_sub(Date,1,2) == '01' ~ 'JAN_22', 
+                str_sub(Date,1,2) == '02' ~ 'FEB_22',
+                str_sub(Date,1,2) == '03' ~ 'MAR_22', 
+                str_sub(Date,1,2) == '04' ~ 'APR_22',
+                str_sub(Date,1,2) == '05' ~ 'MAY_22', 
+                str_sub(Date,1,2) == '06' ~ 'JUN_22',
+                str_sub(Date,1,2) == '07' ~ 'JUL_22', 
+                str_sub(Date,1,2) == '08' ~ 'AUG_22',
+                str_sub(Date,1,2) == '09' ~ 'SEP_22', 
+                str_sub(Date,1,2) == '10' ~'OCT_22',
+                str_sub(Date,1,2) == '11' ~'NOV_21', 
+                str_sub(Date,1,2) == '12' ~'DEC_21'
       ),
     
     
@@ -843,6 +843,7 @@ server <- function(input, output) {
   # items per transaction
   monthly.items.transaction <- function(x){
     items.transaction <- monthly.item.sales(x) /  monthly.transactions(x)
+    items.transaction <- round(items.transaction,2)
     if(items.transaction[[1]] %in% c("NaN","Inf", "-Inf"))
     {print("NA")} else
     {items.transaction[[1]]}   
@@ -937,10 +938,13 @@ server <- function(input, output) {
   # daily transactions
   daily.transactions <- function(x){
     visitors <- mtd1 %>% filter (month == x) %>%
-     mutate(Date=fct_reorder(Date, transactions)) %>%
+     mutate(Date=fct_reorder(Date, transactions), Date = str_sub(Date,1,5)) %>%
       ggplot +
       geom_bar(mapping = aes(Date)) + 
-      ylab("unique visitors")
+      ylab("unique visitors") +
+      xlab("Day")
+     
+      
     visitors
     }
   
